@@ -5,44 +5,44 @@ import jest from "eslint-plugin-jest";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default [
-  {
-    ignores: ["dist/"],
-  },
-  {
-    files: ["src/**/*.{js,ts}"],
-  },
-  {
-    files: ["**/*.js"],
-    languageOptions: {
-      sourceType: "nodenext",
+    {
+        ignores: ["dist/"],
     },
-  },
-  {
-    languageOptions: {
-      globals: globals.node,
+    {
+        files: ["src/**/*.{js,ts}"],
     },
-  },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    files: ["src/tests/**/*.{js,ts}"],
-    ...jest.configs["flat/recommended"],
-    rules: {
-      ...jest.configs["flat/recommended"].rules,
-      "jest/prefer-expect-assertions": "off",
-    },
-  },
-  {
-    rules: {
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-empty-object-type": "off",
-      "prettier/prettier": [
-        "error",
-        {
-          endOfLine: "auto",
+    {
+        files: ["**/*.js"],
+        languageOptions: {
+            sourceType: "nodenext",
         },
-      ],
     },
-  },
-  eslintPluginPrettierRecommended,
+    {
+        languageOptions: {
+            globals: globals.node,
+        },
+    },
+    pluginJs.configs.recommended,
+    ...tseslint.configs.recommended,
+    {
+        files: ["src/tests/**/*.{js,ts}"],
+        ...jest.configs["flat/recommended"],
+        rules: {
+            ...jest.configs["flat/recommended"].rules,
+            "jest/prefer-expect-assertions": "off",
+        },
+    },
+    {
+        rules: {
+            "@typescript-eslint/no-unused-vars": "off",
+            "@typescript-eslint/no-empty-object-type": "off",
+            "prettier/prettier": [
+                "error",
+                {
+                    endOfLine: "auto",
+                },
+            ],
+        },
+    },
+    eslintPluginPrettierRecommended,
 ];
