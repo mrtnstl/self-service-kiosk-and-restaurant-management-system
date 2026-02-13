@@ -1,42 +1,50 @@
 import { Pool } from "pg";
 import pool from "./database.js";
 
-
-// collect services and repos on object literals
-import AuthService from "../auth/auth.service.js";
-
-interface Services {
-    AuthService: AuthService
-}
-const services: Services = {
-    AuthService: new AuthService(),
-};
+// constructing repos
+import UserRepo from "../auth/user.repository.js";
+import CompanyRepo from "../company/company.repository.js";
 
 interface Repos {
-
+    UserRepo: UserRepo;
+    CompanyRepo: CompanyRepo;
+}
+const repos: Repos = {
+    UserRepo: new UserRepo(pool),
+    CompanyRepo: new CompanyRepo(pool),
 };
-const repos: Repos = {};
 
+// inject repos into services
+import AuthService from "../auth/auth.service.js";
+import CompanyService from "../company/company.service.js";
 
+interface Services {
+    AuthService: AuthService;
+    CompanyService: CompanyService
+}
+const services: Services = {
+    AuthService: new AuthService(repos.UserRepo),
+    CompanyService: new CompanyService(repos.CompanyRepo),
+};
+
+// assembling ObjectRepo
 export interface ObjectRepo {
     pool: object;
     services: Services;
-    repos: Repos;
-};
+}
 
 export class ObjectRepo {
     static instance: ObjectRepo;
-    constructor(pool: Pool, services: Services, repos: Repos){
-        if(ObjectRepo.instance){
+    constructor(pool: Pool, services: Services) {
+        if (ObjectRepo.instance) {
             return ObjectRepo.instance;
         }
 
         this.pool = pool;
         this.services = services;
-        this.repos = repos;
 
         ObjectRepo.instance = this;
     }
 }
-const objectRepo = new ObjectRepo(pool, services, repos);
+const objectRepo = new ObjectRepo(pool, services);
 export default objectRepo;
