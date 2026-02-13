@@ -1,0 +1,248 @@
+{
+  "menu": {
+    "restaurant": "Random Japanese Restaurant",
+    "currency": "EUR",
+    "categories": [
+      {
+        "name": "Appetizers & Soups",
+        "items": [
+          {
+            "name": "Edamame",
+            "price": 4.80,
+            "prep_time": 6
+          },
+          {
+            "name": "Miso Soup",
+            "price": 3.50,
+            "prep_time": 8
+          },
+          {
+            "name": "Gyoza (6 pcs)",
+            "price": 6.20,
+            "prep_time": 12
+          },
+          {
+            "name": "Agedashi Tofu",
+            "price": 5.90,
+            "prep_time": 10
+          },
+          {
+            "name": "Takoyaki (6 pcs)",
+            "price": 6.80,
+            "prep_time": 15
+          },
+          {
+            "name": "Seaweed Salad (Wakame)",
+            "price": 4.90,
+            "prep_time": 7
+          },
+          {
+            "name": "Sunomono (Cucumber Salad)",
+            "price": 5.30,
+            "prep_time": 8
+          }
+        ]
+      },
+      {
+        "name": "Sushi & Sashimi",
+        "items": [
+          {
+            "name": "Maguro Nigiri - Tuna (2 pcs)",
+            "price": 6.50,
+            "prep_time": 5
+          },
+          {
+            "name": "Sake Nigiri - Salmon (2 pcs)",
+            "price": 5.90,
+            "prep_time": 5
+          },
+          {
+            "name": "Hamachi Nigiri - Yellowtail (2 pcs)",
+            "price": 7.20,
+            "prep_time": 5
+          },
+          {
+            "name": "Unagi Nigiri - Eel (2 pcs)",
+            "price": 7.80,
+            "prep_time": 6
+          },
+          {
+            "name": "Tamago Nigiri - Egg (2 pcs)",
+            "price": 4.50,
+            "prep_time": 5
+          },
+          {
+            "name": "Maguro Sashimi - Tuna (6 pcs)",
+            "price": 13.50,
+            "prep_time": 10
+          },
+          {
+            "name": "Sake Sashimi - Salmon (6 pcs)",
+            "price": 12.80,
+            "prep_time": 10
+          },
+          {
+            "name": "Mix Sashimi (9 pcs)",
+            "price": 19.90,
+            "prep_time": 12
+          }
+        ]
+      },
+      {
+        "name": "Rolls",
+        "items": [
+          {
+            "name": "California Roll (8 pcs)",
+            "price": 7.90,
+            "prep_time": 12
+          },
+          {
+            "name": "Spicy Tuna Roll (8 pcs)",
+            "price": 8.50,
+            "prep_time": 12
+          },
+          {
+            "name": "Avocado Roll (6 pcs)",
+            "price": 6.50,
+            "prep_time": 10
+          },
+          {
+            "name": "Kappa Maki - Cucumber Roll (6 pcs)",
+            "price": 5.20,
+            "prep_time": 8
+          },
+          {
+            "name": "Philadelphia Roll (8 pcs)",
+            "price": 8.20,
+            "prep_time": 12
+          },
+          {
+            "name": "Rainbow Roll (8 pcs)",
+            "price": 11.90,
+            "prep_time": 18
+          },
+          {
+            "name": "Dragon Roll (8 pcs)",
+            "price": 12.50,
+            "prep_time": 20
+          },
+          {
+            "name": "Spider Roll (Soft-shell Crab)",
+            "price": 11.50,
+            "prep_time": 18
+          },
+          {
+            "name": "Volcano Roll",
+            "price": 13.20,
+            "prep_time": 20
+          }
+        ]
+      },
+      {
+        "name": "Main Dishes & Desserts",
+        "items": [
+          {
+            "name": "Chicken Teriyaki with Rice",
+            "price": 13.90,
+            "prep_time": 25
+          },
+          {
+            "name": "Beef Teriyaki with Rice",
+            "price": 16.50,
+            "prep_time": 25
+          },
+          {
+            "name": "Salmon Teriyaki",
+            "price": 15.80,
+            "prep_time": 22
+          },
+          {
+            "name": "Tonkatsu (Pork Cutlet)",
+            "price": 14.50,
+            "prep_time": 25
+          },
+          {
+            "name": "Vegetable Tempura Set",
+            "price": 11.90,
+            "prep_time": 20
+          },
+          {
+            "name": "Shrimp Tempura Udon",
+            "price": 13.20,
+            "prep_time": 25
+          },
+          {
+            "name": "Mochi Ice Cream (2 pcs)",
+            "price": 5.50,
+            "prep_time": 5
+          },
+          {
+            "name": "Green Tea Cheesecake",
+            "price": 6.20,
+            "prep_time": 8
+          }
+        ]
+      },
+      {
+        "name": "Teas",
+        "items": [
+          {
+            "name": "Sencha (Green Tea)",
+            "price": 3.20,
+            "prep_time": 4
+          },
+          {
+            "name": "Gyokuro (Premium Shaded Green Tea)",
+            "price": 5.80,
+            "prep_time": 5
+          },
+          {
+            "name": "Matcha (Ceremonial Grade Powdered Green Tea)",
+            "price": 4.90,
+            "prep_time": 6
+          },
+          {
+            "name": "Hojicha (Roasted Green Tea)",
+            "price": 3.50,
+            "prep_time": 4
+          },
+          {
+            "name": "Genmaicha (Green Tea with Roasted Rice)",
+            "price": 3.80,
+            "prep_time": 4
+          },
+          {
+            "name": "Kukicha (Twig Tea)",
+            "price": 3.90,
+            "prep_time": 5
+          },
+          {
+            "name": "Bancha (Coarse Leaf Green Tea)",
+            "price": 3.00,
+            "prep_time": 4
+          },
+          {
+            "name": "Kabusecha (Lightly Shaded Sencha)",
+            "price": 4.50,
+            "prep_time": 5
+          },
+          {
+            "name": "Fukamushicha (Deep-Steamed Sencha)",
+            "price": 4.20,
+            "prep_time": 4
+          },
+          {
+            "name": "Mugicha (Roasted Barley Tea – Caffeine-free)",
+            "price": 2.80,
+            "prep_time": 6
+          },
+          {
+            "name": "Shincha (First Flush Sencha – Seasonal)",
+            "price": 5.50,
+            "prep_time": 4
+          }
+        ]
+      }
+    ]
+  }
+}
