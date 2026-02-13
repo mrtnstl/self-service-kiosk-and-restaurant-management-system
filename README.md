@@ -11,6 +11,8 @@ the restaurant used as an example is a ficticiuos sushi place with minimalist, p
 
 ![customer_flow](https://github.com/mrtnstl/self-service-kiosk-and-restaurant-management-system/blob/main/docs/customer_flow.png "customer_flow")
 
+![company_reg_flow](https://github.com/mrtnstl/self-service-kiosk-and-restaurant-management-system/blob/main/docs/company_reg_flow.png "company_reg_flow")
+
 ## Models and ERD
 
 ![models_and_erd](https://github.com/mrtnstl/self-service-kiosk-and-restaurant-management-system/blob/main/docs/models_and_erd.png "models_and_erd")
