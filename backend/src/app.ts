@@ -29,9 +29,9 @@ initRoutes(app);
 
 const server = app.listen(PORT, () => console.log(`listening on port ${PORT}`));
 
-process.on("SIGINT", async (eventName)=>{
-  await gracefulShutdown(eventName, server);
+process.on("SIGINT", async eventName => {
+    await gracefulShutdown(eventName, server);
 });
-process.on("SIGTERM", async (eventName)  => {
-  await gracefulShutdown(eventName, server);
+process.on("SIGTERM", async eventName => {
+    await gracefulShutdown(eventName, server);
 });
