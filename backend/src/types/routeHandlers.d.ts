@@ -2,15 +2,15 @@ import { RequestHandler } from "express";
 import { UUID } from "node:crypto";
 import * as express from "express";
 
-type CreateNonManagerUserBody = {
+type CreateNonManagerUserBodyType = {
     name: string;
     password: string;
-    role: string;
-    restaurantId: UUID;
+    roleId: number;
+    restaurantId: string;
 };
 
 type UserPayload = {
-    companyId: UUID;
+    companyId: string;
 };
 
 declare global {
