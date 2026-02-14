@@ -8,27 +8,17 @@ import gracefulShutdown from "./utils/gracefulShutdown.js";
 import { testDBConn } from "./utils/database.js";
 import { initRoutes } from "./routes/index.js";
 
-//import { calculateTotalPrice, Product } from "./cart.js";
-
 const app = express();
 
 const PORT = config.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors(config.CORS_OPTIONS));
 
 (async () => {
     await testDBConn();
 })();
-
-/*
-const cart: Product[] = [
-  { id: 1, name: "Sushi1", price: 39, quantity: 1 },
-  { id: 2, name: "Sushi2", price: 19, quantity: 2 },
-  { id: 3, name: "Chopsticks", price: 2, quantity: 1 },
-];
-console.log("Total Price:", calculateTotalPrice(cart));
-*/
 
 initRoutes(app);
 
