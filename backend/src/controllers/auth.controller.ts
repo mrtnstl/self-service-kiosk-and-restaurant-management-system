@@ -1,13 +1,13 @@
 import { RequestHandler } from "express";
 import { ObjectRepo } from "../utils/DI.js";
-import { CreateNonManagerUserBody } from "../types/routeHandlers.js";
-import { managerUserSchema, nonManagerUserSchema } from "../schemas/auth.schemas.js";
+import { CreateNonManagerUserBodyType } from "../types/routeHandlers.js";
 
-interface AuthController {
+interface AuthControllerInterf {
     objectRepo: ObjectRepo;
 }
-class AuthController {
+class AuthController implements AuthControllerInterf {
     private static instance: AuthController;
+    objectRepo!: ObjectRepo;
     constructor(objectRepo: ObjectRepo) {
         if (AuthController.instance) {
             return AuthController.instance;
@@ -19,10 +19,8 @@ class AuthController {
     }
     // register new manager user,
     register(): RequestHandler {
-        const { services } = this.objectRepo;
+        const { services, schemas } = this.objectRepo;
         return async (req, res) => {
-            // TODO: validate/sanitize input
-
             const { email, name, password, companyId } = req.body || {};
             if (
                 typeof email === "undefined" ||
@@ -35,7 +33,7 @@ class AuthController {
                     .json({ message: "bad request. missing arguments." });
             }
 
-            const { data, error } = managerUserSchema.safeParse(req.body);
+            const { data, error } = schemas.authSchemas.managerUserSchema.safeParse(req.body);
             if (error) {
                 console.log(error);
                 return res
@@ -45,7 +43,7 @@ class AuthController {
 
             try {
                 const result =
-                    await services.AuthService.registerNewCompanyManager(data);
+                    await services.AuthService.registerNewCompanyManager(this.objectRepo, data);
                 console.log(result);
                 return res
                     .status(200)
@@ -67,7 +65,7 @@ class AuthController {
     logout(): RequestHandler {
         //const {} = this.objectRepo;
         return async (_req, res) => {
-            // TODO: validate/sanitize input
+            // TODO:
             //      call user service logoutUser
             // respond
             return res.status(200).json({ message: "hello from logout" });
@@ -76,16 +74,16 @@ class AuthController {
     registerNonManagerUser(): RequestHandler<
         unknown,
         unknown,
-        CreateNonManagerUserBody,
+        CreateNonManagerUserBodyType,
         unknown
     > {
-        const { services } = this.objectRepo;
+        const { services, schemas } = this.objectRepo;
         return async (req, res) => {
-            const { name, password, role, restaurantId } = req.body || {};
+            const { name, password, roleId, restaurantId } = req.body || {};
             if (
                 typeof name === "undefined" ||
                 typeof password === "undefined" ||
-                typeof role === "undefined" ||
+                typeof roleId === "undefined" ||
                 typeof restaurantId === "undefined"
             ) {
                 return res
@@ -93,7 +91,7 @@ class AuthController {
                     .json({ message: "bad request." });
             }
 
-            const { data, error }  = nonManagerUserSchema.safeParse({
+            const { data, error } = schemas.authSchemas.nonManagerUserSchema.safeParse({
                 ...req.body,
                 companyId: req.user.companyId,
             });
@@ -106,7 +104,7 @@ class AuthController {
 
             try {
                 const result =
-                    await services.AuthService.registerNewNonManagerUser(data!);
+                    await services.AuthService.registerNewNonManagerUser(this.objectRepo, data!);
                 console.log(result);
                 return res
                     .status(201)

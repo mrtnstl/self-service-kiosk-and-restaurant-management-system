@@ -1,11 +1,13 @@
 import { RequestHandler } from "express";
 import { ObjectRepo } from "../utils/DI.js";
 
-interface CompanyController {
+interface CompanyControllerIntrf {
     objectRepo: ObjectRepo;
 }
-class CompanyController {
+class CompanyController implements CompanyControllerIntrf{
     private static instance: CompanyController;
+    objectRepo!: ObjectRepo;
+
     constructor(objectRepo: ObjectRepo) {
         if (CompanyController.instance) {
             return CompanyController.instance;
@@ -15,7 +17,7 @@ class CompanyController {
     }
     // register a new company, manager users only
     register(): RequestHandler {
-        const { services } = this.objectRepo;
+        const { services, schemas } = this.objectRepo;
         return async (req, res) => {
             const { name, logoUrl } = req.body || {};
             if (typeof name === "undefined") {
@@ -25,13 +27,17 @@ class CompanyController {
                 });
             }
             // TODO: validate/sanitize input
+            const { data, error } = schemas.companySchemas.newCompanySchema.safeParse(req.body);
+            if (error) {
+                console.log(error);
+                return res
+                    .status(401)
+                    .json({ message: "bad request. invalid arguments." });
+            }
 
             try {
                 const newCompanyId =
-                    await services.CompanyService.registerNewCompany(
-                        name,
-                        logoUrl
-                    );
+                    await services.CompanyService.registerNewCompany(this.objectRepo, data);
                 return res
                     .status(201)
                     .json({ message: "success", newCompanyId });

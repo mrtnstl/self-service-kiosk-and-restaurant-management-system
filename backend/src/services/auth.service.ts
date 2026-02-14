@@ -1,30 +1,27 @@
-import { UUID } from "node:crypto";
-import UserRepo from "../repositories/user.repository.js";
+import { ObjectRepo } from "../utils/DI.js";
 
-export interface AuthService {
-    UserRepo: UserRepo;
-}
-
-export class AuthService {
+export interface AuthServiceIntrf {}
+export class AuthService implements AuthServiceIntrf {
     private static instance: AuthService;
-    constructor(UserRepo: UserRepo) {
+    constructor() {
         if (AuthService.instance) {
             return AuthService.instance;
         }
-        this.UserRepo = UserRepo;
         AuthService.instance = this;
     }
-    async registerNewCompanyManager(data: {
-        email: string,
-        name: string,
-        companyId: string
-        password: string
-    }) {
-        // TODO: check if user exists, create psHash and salt, call user repo, insertNewManagerUser
-        // respond
+    async registerNewCompanyManager(objectRepo: ObjectRepo, 
+        data: {
+            email: string,
+            name: string,
+            companyId: string
+            password: string
+        }) {
+        // TODO: create psHash and salt
+        
+        const {repos} = objectRepo;
         const {email, name, companyId, password} = data;
         try {
-            const existingUser = await this.UserRepo.getUserByEmail(email);
+            const existingUser = await repos.UserRepo.getUserByEmail(objectRepo,email);
             console.log(existingUser);
             if (existingUser.rows.length > 0) {
                 throw new Error("user already exists.");
@@ -43,7 +40,7 @@ export class AuthService {
                 pwHash: "asd",
                 pwSalt: "asd",
             };
-            const newManager = await this.UserRepo.insertNewManagerUser(user);
+            const newManager = await repos.UserRepo.insertNewManagerUser(objectRepo, user);
             return newManager;
         } catch (err: any) {
             throw err;
@@ -59,38 +56,41 @@ export class AuthService {
         // respond
         return "logout user serv";
     }
-    async registerNewNonManagerUser(data: {
-        name: string;
-        password: string;
-        role: string;
-        restaurantId: string;
-        companyId: string;
-    }) {
-        const { name, password, role, restaurantId, companyId } = data;
+    async registerNewNonManagerUser(
+        objectRepo: ObjectRepo,
+        data: {
+            name: string;
+            password: string;
+            roleId: number;
+            restaurantId: string;
+            companyId: string;
+        }) {
+            const {repos} = objectRepo;
+        const { name, password, roleId, restaurantId, companyId } = data;
         try {
-            const existingUser = await this.UserRepo.getUserByName(name);
+            const existingUser = await repos.UserRepo.getUserByName(objectRepo, name);
             if (existingUser.rows.length > 0) {
                 throw new Error("user already exists.");
             }
 
-            // TODO: gen pwhash
+            
             const user: {
                 name: string;
-                role: string;
+                roleId: number;
                 restaurantId: string;
                 companyId: string;
                 pwHash: string;
                 pwSalt: string;
             } = {
                 name: name,
-                role: role,
+                roleId: roleId,
                 restaurantId: restaurantId,
                 companyId: companyId,
                 pwHash: "asd",
                 pwSalt: "asd",
             };
 
-            const newUser = await this.UserRepo.insertNewInternalUser(user);
+            const newUser = await repos.UserRepo.insertNewInternalUser(objectRepo, user);
             return newUser;
         } catch (err: any) {
             throw err;

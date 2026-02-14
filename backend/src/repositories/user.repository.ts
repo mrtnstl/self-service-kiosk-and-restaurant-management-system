@@ -1,20 +1,16 @@
-import { UUID } from "node:crypto";
-import { Pool } from "pg";
+import { ObjectRepo } from "../utils/DI.js";
 
-export interface UserRepo {
-    pool: Pool;
-}
-export class UserRepo {
+export interface UserRepoIntrf {}
+export class UserRepo implements UserRepoIntrf {
     private static instance: UserRepo;
-    constructor(pool: Pool) {
+    constructor() {
         if (UserRepo.instance) {
             return UserRepo.instance;
         }
-        this.pool = pool;
         UserRepo.instance = this;
     }
     // create manager account, fixed manager role (after company profile creation)
-    async insertNewManagerUser({
+    async insertNewManagerUser(objectRepo: ObjectRepo, {
         name,
         email,
         companyId,
@@ -27,44 +23,46 @@ export class UserRepo {
         pwHash: string;
         pwSalt: string;
     }) {
-        const result = await this.pool.query(
+        const result = await objectRepo.pool.query(
             "INSERT INTO users (name, email, company_id, role_id, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6);",
             [name, email, companyId, 1, pwHash, pwSalt]
         );
         return result;
     }
-    async getUserByEmail(email: string) {
-        const result = await this.pool.query(
+    async getUserByEmail(objectRepo: ObjectRepo, email: string) {
+        const result = await objectRepo.pool.query(
             "SELECT id, name, email FROM users WHERE email = $1;",
             [email]
         );
         return result;
     }
-    async getUserByName(name: string) {
-        const result = await this.pool.query(
+    async getUserByName(objectRepo: ObjectRepo, name: string) {
+        const result = await objectRepo.pool.query(
             "SELECT id, name, email FROM users WHERE name = $1;",
             [name]
         );
         return result;
     }
     // company managers can create interanl users, non-manager roles
-    async insertNewInternalUser({
+    async insertNewInternalUser(objectRepo: ObjectRepo, {
         name,
-        role,
+        roleId,
         restaurantId,
         companyId,
         pwHash,
         pwSalt,
     }: {
         name: string;
-        role: string;
+        roleId: number;
         restaurantId: string;
         companyId: string;
         pwHash: string;
         pwSalt: string;
     }) {
-        return { name, role, restaurantId, companyId, pwHash };
-        const result = await this.pool.query("", []);
+        const result = await objectRepo.pool.query(
+            "INSERT INTO users (name, company_id, restaurant_id, role_id, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6);",
+            [name, companyId, restaurantId, roleId, pwHash, pwSalt]
+        );
         return result;
     }
 }
