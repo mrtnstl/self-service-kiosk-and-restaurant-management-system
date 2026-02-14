@@ -15,9 +15,17 @@ export class UserRepo {
     }
     // create manager account, fixed manager role (after company profile creation)
     async insertNewManagerUser({
-        name, email, companyId, pwHash, pwSalt
-    }:{
-        name: string, email: string, companyId: UUID, pwHash: string, pwSalt: string
+        name,
+        email,
+        companyId,
+        pwHash,
+        pwSalt,
+    }: {
+        name: string;
+        email: string;
+        companyId: string;
+        pwHash: string;
+        pwSalt: string;
     }) {
         const result = await this.pool.query(
             "INSERT INTO users (name, email, company_id, role_id, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6);",
@@ -32,8 +40,30 @@ export class UserRepo {
         );
         return result;
     }
+    async getUserByName(name: string) {
+        const result = await this.pool.query(
+            "SELECT id, name, email FROM users WHERE name = $1;",
+            [name]
+        );
+        return result;
+    }
     // company managers can create interanl users, non-manager roles
-    async insertNewInternalUser() {
+    async insertNewInternalUser({
+        name,
+        role,
+        restaurantId,
+        companyId,
+        pwHash,
+        pwSalt,
+    }: {
+        name: string;
+        role: string;
+        restaurantId: string;
+        companyId: string;
+        pwHash: string;
+        pwSalt: string;
+    }) {
+        return { name, role, restaurantId, companyId, pwHash };
         const result = await this.pool.query("", []);
         return result;
     }

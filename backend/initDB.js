@@ -94,7 +94,8 @@ async function execute(tables, action) {
         process.exit(1);
     }
 }
-const rawDishes = JSON.parse(fs.readFileSync("./sushi_menu.json")).menu.categories;
+const rawDishes = JSON.parse(fs.readFileSync("./sushi_menu.json")).menu
+    .categories;
 
 async function seedDishes() {
     const dishIDArray = [];

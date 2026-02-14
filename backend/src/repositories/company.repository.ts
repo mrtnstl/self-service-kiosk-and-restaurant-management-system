@@ -14,9 +14,11 @@ export class CompanyRepo {
     }
     // company profile
     async insertNewCompany({
-        name, logoUrl
-    }:{
-        name: string, logoUrl: string
+        name,
+        logoUrl,
+    }: {
+        name: string;
+        logoUrl: string;
     }) {
         const result = await this.pool.query(
             "INSERT INTO companies (name, logo) VALUES ($1, $2) RETURNING id as company_id;",

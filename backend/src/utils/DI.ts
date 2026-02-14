@@ -2,8 +2,8 @@ import { Pool } from "pg";
 import pool from "./database.js";
 
 // constructing repos
-import UserRepo from "../auth/user.repository.js";
-import CompanyRepo from "../company/company.repository.js";
+import UserRepo from "../repositories/user.repository.js";
+import CompanyRepo from "../repositories/company.repository.js";
 
 interface Repos {
     UserRepo: UserRepo;
@@ -15,12 +15,12 @@ const repos: Repos = {
 };
 
 // inject repos into services
-import AuthService from "../auth/auth.service.js";
-import CompanyService from "../company/company.service.js";
+import AuthService from "../services/auth.service.js";
+import CompanyService from "../services/company.service.js";
 
 interface Services {
     AuthService: AuthService;
-    CompanyService: CompanyService
+    CompanyService: CompanyService;
 }
 const services: Services = {
     AuthService: new AuthService(repos.UserRepo),
@@ -29,7 +29,7 @@ const services: Services = {
 
 // assembling ObjectRepo
 export interface ObjectRepo {
-    pool: object;
+    pool: Pool;
     services: Services;
 }
 

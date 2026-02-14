@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ObjectRepo from "../utils/DI.js";
 
-import RestaurantController from "../restaurant/restaurant.controller.js";
+import RestaurantController from "../controllers/restaurant.controller.js";
 
 const restaurantController = new RestaurantController(ObjectRepo);
 

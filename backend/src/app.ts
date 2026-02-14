@@ -5,6 +5,7 @@ import helmet from "helmet";
 import cors from "cors";
 
 import gracefulShutdown from "./utils/gracefulShutdown.js";
+import { testDBConn } from "./utils/database.js";
 import { initRoutes } from "./routes/index.js";
 
 //import { calculateTotalPrice, Product } from "./cart.js";
@@ -15,6 +16,10 @@ const PORT = config.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
+
+(async () => {
+    await testDBConn();
+})();
 
 /*
 const cart: Product[] = [

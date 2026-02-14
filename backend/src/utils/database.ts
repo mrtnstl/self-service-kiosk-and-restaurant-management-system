@@ -17,16 +17,10 @@ pool.on("error", (err, _client) => {
     process.exit(-1);
 });
 
-//
-(async () => {
-    try {
-        const client = await pool.connect();
-        const { rows } = await client.query("SELECT version();");
-        console.log(rows[0]);
-        client.release();
-    } catch (err) {
-        console.error("Database Error:", err);
-    }
-})();
+export async function testDBConn() {
+    const isAlive = (await pool.query("SELECT true as isAlive;")).rows[0]
+        .isalive;
+    console.log("is db alive:", isAlive);
+}
 
 export default pool;
