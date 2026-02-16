@@ -1,26 +1,28 @@
 import { RequestHandler } from "express";
-import { ObjectRepo } from "../utils/DI.js";
 import { CreateNonManagerUserBodyType } from "../types/routeHandlers.js";
+import { AuthSchemasInterf } from "../schemas/auth.schema.js";
+import AuthService from "../services/auth.service.js";
+import { BadRequestError, ValidationError } from "../errors/index.js";
+import z from "zod";
 
-interface AuthControllerInterf {
-    objectRepo: ObjectRepo;
-}
+interface AuthControllerInterf {}
 class AuthController implements AuthControllerInterf {
     private static instance: AuthController;
-    objectRepo!: ObjectRepo;
-    constructor(objectRepo: ObjectRepo) {
+    authSchemas!: AuthSchemasInterf;
+    authService!: AuthService;
+
+    constructor(authSchemas: AuthSchemasInterf, authService: AuthService) {
         if (AuthController.instance) {
             return AuthController.instance;
         }
-
-        this.objectRepo = objectRepo;
-
+        this.authSchemas = authSchemas;
+        this.authService = authService;
         AuthController.instance = this;
     }
+
     // register new manager user,
     register(): RequestHandler {
-        const { services, schemas } = this.objectRepo;
-        return async (req, res) => {
+        return async (req, res, next) => {
             const { email, name, password, companyId } = req.body || {};
             if (
                 typeof email === "undefined" ||
@@ -28,28 +30,24 @@ class AuthController implements AuthControllerInterf {
                 typeof password === "undefined" ||
                 typeof companyId === "undefined"
             ) {
-                return res
-                    .status(401)
-                    .json({ message: "bad request. missing arguments." });
+                throw new BadRequestError("Missing arguments");
             }
 
-            const { data, error } = schemas.authSchemas.managerUserSchema.safeParse(req.body);
+            const { data, error } =
+                this.authSchemas.managerUserSchema.safeParse(req.body);
             if (error) {
-                console.log(error);
-                return res
-                    .status(401)
-                    .json({ message: "bad request. invalid arguments." });
+                throw new ValidationError(z.flattenError(error).fieldErrors);
             }
 
             try {
                 const result =
-                    await services.AuthService.registerNewCompanyManager(this.objectRepo, data);
-                console.log(result);
+                    await this.authService.registerNewCompanyManager(data);
+
                 return res
                     .status(200)
                     .json({ message: "new manager registered successfully." });
             } catch (err: any) {
-                return res.status(400).json({ message: err.message });
+                return next(err);
             }
         };
     }
@@ -77,8 +75,7 @@ class AuthController implements AuthControllerInterf {
         CreateNonManagerUserBodyType,
         unknown
     > {
-        const { services, schemas } = this.objectRepo;
-        return async (req, res) => {
+        return async (req, res, next) => {
             const { name, password, roleId, restaurantId } = req.body || {};
             if (
                 typeof name === "undefined" ||
@@ -86,31 +83,27 @@ class AuthController implements AuthControllerInterf {
                 typeof roleId === "undefined" ||
                 typeof restaurantId === "undefined"
             ) {
-                return res
-                    .status(401)
-                    .json({ message: "bad request." });
+                throw new BadRequestError("Missing arguments");
             }
 
-            const { data, error } = schemas.authSchemas.nonManagerUserSchema.safeParse({
-                ...req.body,
-                companyId: req.user.companyId,
-            });
+            const { data, error } =
+                this.authSchemas.nonManagerUserSchema.safeParse({
+                    ...req.body,
+                    companyId: req.user.companyId,
+                });
             if (error) {
-                console.log(error);
-                return res
-                    .status(401)
-                    .json({ message: "bad request. invalid arguments." });
+                throw new ValidationError(z.flattenError(error).fieldErrors);
             }
 
             try {
-                const result =
-                    await services.AuthService.registerNewNonManagerUser(this.objectRepo, data!);
-                console.log(result);
+                const result = await this.authService.registerNewNonManagerUser(
+                    data!
+                );
                 return res
                     .status(201)
                     .json({ message: "new user registered successfully." });
             } catch (err: any) {
-                return res.status(400).json({ message: err.message });
+                return next(err);
             }
         };
     }

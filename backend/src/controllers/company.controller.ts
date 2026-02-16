@@ -1,49 +1,49 @@
 import { RequestHandler } from "express";
-import { ObjectRepo } from "../utils/DI.js";
+import { CompanySchemasInterf } from "../schemas/company.schema.js";
+import CompanyService from "../services/company.service.js";
+import { BadRequestError, ValidationError } from "../errors/index.js";
+import z from "zod";
 
-interface CompanyControllerIntrf {
-    objectRepo: ObjectRepo;
-}
-class CompanyController implements CompanyControllerIntrf{
+interface CompanyControllerIntrf {}
+class CompanyController implements CompanyControllerIntrf {
     private static instance: CompanyController;
-    objectRepo!: ObjectRepo;
+    companySchemas!: CompanySchemasInterf;
+    companyService!: CompanyService;
 
-    constructor(objectRepo: ObjectRepo) {
+    constructor(
+        companySchemas: CompanySchemasInterf,
+        companyService: CompanyService
+    ) {
         if (CompanyController.instance) {
             return CompanyController.instance;
         }
-        this.objectRepo = objectRepo;
+        this.companySchemas = companySchemas;
+        this.companyService = companyService;
         CompanyController.instance = this;
     }
+
     // register a new company, manager users only
     register(): RequestHandler {
-        const { services, schemas } = this.objectRepo;
-        return async (req, res) => {
+        return async (req, res, next) => {
             const { name, logoUrl } = req.body || {};
             if (typeof name === "undefined") {
-                return res.status(400).json({
-                    message:
-                        "failed to register company. name can not be undefined.",
-                });
+                throw new BadRequestError("Missing arguments");
             }
             // TODO: validate/sanitize input
-            const { data, error } = schemas.companySchemas.newCompanySchema.safeParse(req.body);
+            const { data, error } =
+                this.companySchemas.newCompanySchema.safeParse(req.body);
             if (error) {
-                console.log(error);
-                return res
-                    .status(401)
-                    .json({ message: "bad request. invalid arguments." });
+                throw new ValidationError(z.flattenError(error).fieldErrors);
             }
 
             try {
                 const newCompanyId =
-                    await services.CompanyService.registerNewCompany(this.objectRepo, data);
+                    await this.companyService.registerNewCompany(data);
                 return res
                     .status(201)
                     .json({ message: "success", newCompanyId });
             } catch (err: any) {
-                console.log("ERROR:", err);
-                return res.status(400).json({ message: err.message });
+                return next(err);
             }
         };
     }
