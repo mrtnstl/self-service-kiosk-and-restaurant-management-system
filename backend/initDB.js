@@ -71,13 +71,24 @@ const tables = {
             category VARCHAR(30) NOT NULL,
             min_price DOUBLE PRECISION NOT NULL,
             estimated_prep_minutes SMALLINT NOT NULL
-        )`,
-        drop: `DROP TABLE IS EXISTS dishes`,
+        );`,
+        drop: `DROP TABLE IS EXISTS dishes;`,
+        seed: `SELECT NOW();`,
+    },
+    restaurants: {
+        create: `CREATE TABLE IF NOT EXISTS restaurants (
+            id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+            company_id UUID NOT NULL,
+            name VARCHAR(60) NOT NULL,
+            location VARCHAR(100) DEFAULT '',
+            created_at TIMESTAMPTZ DEFAULT NOW()
+        );`,
+        drop: `DROP TABLE IS EXISTS restaurants;`,
         seed: `SELECT NOW();`,
     },
 };
 
-//execute(tables, "create");
+execute(tables, "create");
 
 async function execute(tables, action) {
     if (typeof action === "undefined") {
