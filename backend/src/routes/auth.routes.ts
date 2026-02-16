@@ -1,9 +1,7 @@
 import { Router } from "express";
-import objectRepo from "../utils/DI.js";
+import { createAuthController } from "../controllers/auth.controller.factory.js";
 
-import AuthController from "../controllers/auth.controller.js";
-
-const authContrlr = new AuthController(objectRepo);
+const authContrlr = createAuthController();
 
 const authRouter = Router();
 

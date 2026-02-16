@@ -1,9 +1,7 @@
 import { Router } from "express";
-import objectRepo from "../utils/DI.js";
+import { createCompanyController } from "../controllers/company.controller.factory.js";
 
-import CompanyController from "../controllers/company.controller.js";
-
-const companyContrlr = new CompanyController(objectRepo);
+const companyContrlr = createCompanyController();
 
 const companyRouter = Router();
 

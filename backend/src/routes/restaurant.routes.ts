@@ -1,12 +1,14 @@
 import { Router } from "express";
-import ObjectRepo from "../utils/DI.js";
+import { createRestaurantController } from "../controllers/restaurant.controller.factory.js";
 
-import RestaurantController from "../controllers/restaurant.controller.js";
-
-const restaurantController = new RestaurantController(ObjectRepo);
+const restaurantController = createRestaurantController();
 
 const restaurantRouter = Router();
 
-restaurantRouter.get("/", restaurantController.getRestaurantData());
+restaurantRouter.get("/", /*authMW*/ restaurantController.getRestaurantById());
+restaurantRouter.post(
+    "/",
+    /*authMW authorizeMW*/ restaurantController.createNewRestaurant()
+);
 
 export default restaurantRouter;
