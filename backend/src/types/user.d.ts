@@ -9,7 +9,7 @@ interface User {
     password: string;
 }
 type Hashes = { pwHash: string; pwSalt: string };
-type UserSecretToken = {userSecretToken: string};
+type UserSecretToken = { userSecretToken: string };
 
 export type UserManager = Omit<
     User,
@@ -19,10 +19,13 @@ export type UserManagerNew = Omit<
     User,
     "id" | "restaurantId" | "roleId" | "createdAt" | "password"
 > &
-    Hashes & UserSecretToken;
+    Hashes &
+    UserSecretToken;
 export type UserRegural = Omit<User, "id" | "email" | "createdAt">;
 export type UserReguralNew = Omit<
     User,
     "id" | "email" | "password" | "createdAt"
 > &
     Hashes;
+
+export type ApplianceLogin = Pick<User, "name" | "password">;

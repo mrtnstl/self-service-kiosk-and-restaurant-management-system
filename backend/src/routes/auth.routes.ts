@@ -1,5 +1,8 @@
 import { Router } from "express";
 import { createAuthController } from "../controllers/auth.controller.factory.js";
+import authenticationMW from "../middleware/authenticationMW.js";
+import authorizationMW from "../middleware/authorizationMW.js";
+import config from "../config/index.js";
 
 const authContrlr = createAuthController();
 
@@ -7,13 +10,26 @@ const authRouter = Router();
 
 authRouter.post("/register", authContrlr.register());
 authRouter.post("/login", authContrlr.login());
-authRouter.post("/logout", /* authMW */ authContrlr.logout());
+authRouter.get("/logout", authenticationMW(), authContrlr.logout());
+authRouter.post("/appliance-login", authContrlr.loginAppliance());
+authRouter.get(
+    "/appliance-logout",
+    authenticationMW(),
+    authContrlr.logoutAppliance()
+);
 authRouter.post(
-    "/create-non-manager",
-    /* authMW, autorizMW*/ authContrlr.registerNonManagerUser()
+    "/appliance-register",
+    authenticationMW(),
+    authorizationMW([config.ROLES.MANAGER]),
+    authContrlr.registerNonManagerUser()
 );
 authRouter.get("/verify/:token", authContrlr.setUserToVerified());
-authRouter.put("/disable", authContrlr.disableUserVerification());
+authRouter.put(
+    "/disable",
+    authenticationMW(),
+    authorizationMW([config.ROLES.MANAGER]),
+    authContrlr.disableUserVerification()
+);
 // TODO: forgot pw, set new pw
 
 export default authRouter;

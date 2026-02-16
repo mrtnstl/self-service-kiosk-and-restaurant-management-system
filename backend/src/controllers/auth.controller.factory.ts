@@ -14,7 +14,12 @@ export function createAuthController(): AuthController {
     const notificationService = new NotificationService(sendEmail, config);
     const authRepo = new AuthRepo(pool);
 
-    const authService = new AuthService(userRepo, authRepo, notificationService, bcrypt);
+    const authService = new AuthService(
+        userRepo,
+        authRepo,
+        notificationService,
+        bcrypt
+    );
 
     return new AuthController(authSchemas, authService);
 }

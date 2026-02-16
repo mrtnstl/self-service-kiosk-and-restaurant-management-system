@@ -65,7 +65,13 @@ export class NotificationError extends AppError {
 
 // TEMP
 export class UserVerificationError extends AppError {
-    constructor(message = "User verification error"){
+    constructor(message = "User verification error") {
         super(message, 400, true);
+    }
+}
+
+export class AuthenticationError extends UnauthorizedError {
+    constructor(message = "Failed to authenticate user") {
+        super(message);
     }
 }

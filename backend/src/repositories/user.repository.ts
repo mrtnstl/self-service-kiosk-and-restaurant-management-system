@@ -17,7 +17,7 @@ export class UserRepo {
         companyId,
         pwHash,
         pwSalt,
-        userSecretToken
+        userSecretToken,
     }: {
         name: string;
         email: string;
@@ -25,7 +25,9 @@ export class UserRepo {
         pwHash: string;
         pwSalt: string;
         userSecretToken: string;
-    }): Promise<QueryResult<{ name: string; email: string, usersecrettoken: string }>> {
+    }): Promise<
+        QueryResult<{ name: string; email: string; usersecrettoken: string }>
+    > {
         const result = await this.pool.query(
             "INSERT INTO users (name, email, company_id, role_id, is_verified, user_secret_token, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING name, email, user_secret_token AS usersecrettoken;",
             [name, email, companyId, 1, false, userSecretToken, pwHash, pwSalt]
@@ -41,12 +43,12 @@ export class UserRepo {
     }
     async getUserByName(name: string) {
         const result = await this.pool.query(
-            "SELECT id, name, email FROM users WHERE name = $1;",
+            "SELECT id, name, email, company_id, restaurant_id, role_id, is_verified, pw_hash, pw_salt FROM users WHERE name = $1;",
             [name]
         );
         return result;
     }
-    // company managers can create interanl users, non-manager roles
+    // company managers can create internal users, non-manager roles
     async insertNewInternalUser({
         name,
         roleId,

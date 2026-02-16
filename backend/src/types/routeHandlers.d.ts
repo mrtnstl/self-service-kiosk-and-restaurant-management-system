@@ -11,6 +11,7 @@ type CreateNonManagerUserBodyType = {
 
 type UserPayload = {
     companyId: string;
+    roleId: number;
 };
 
 declare global {

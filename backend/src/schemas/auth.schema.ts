@@ -16,6 +16,11 @@ export const managerUserSchema = z.object({
     companyId: z.string(),
 });
 
+export const applianceLoginInputSchema = z.object({
+    name: z.string(),
+    password: z.string(),
+});
+
 export interface AuthSchemasInterf {
     nonManagerUserSchema: z.ZodObject<
         {
@@ -36,9 +41,17 @@ export interface AuthSchemasInterf {
         },
         z.core.$strip
     >;
+    applianceLoginInputSchema: z.ZodObject<
+        {
+            name: z.ZodString;
+            password: z.ZodString;
+        },
+        z.core.$strip
+    >;
 }
 const authSchemas: AuthSchemasInterf = {
     nonManagerUserSchema,
     managerUserSchema,
+    applianceLoginInputSchema,
 };
 export default authSchemas;

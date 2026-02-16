@@ -17,8 +17,11 @@ export class AuthRepo {
         );
         return result;
     }
-    async updateUserIsVerifiedToFalse(userId: string){
-        const result = await this.pool.query("UPDATE users SET is_verified = false WHERE id = $1;",[userId]);
+    async updateUserIsVerifiedToFalse(userId: string) {
+        const result = await this.pool.query(
+            "UPDATE users SET is_verified = false WHERE id = $1;",
+            [userId]
+        );
         return result;
     }
 }

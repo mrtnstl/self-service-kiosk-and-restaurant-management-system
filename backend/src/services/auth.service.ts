@@ -1,7 +1,10 @@
-import { UserVerificationError } from "../errors/index.js";
+import { AuthenticationError, UserVerificationError } from "../errors/index.js";
+import { genAccessToken } from "../helpers/auth.helpers.js";
 import AuthRepo from "../repositories/auth.repository.js";
 import UserRepo from "../repositories/user.repository.js";
+import { AccessTokenPayload } from "../types/token.js";
 import {
+    ApplianceLogin,
     UserManager,
     UserManagerNew,
     UserRegural,
@@ -54,11 +57,11 @@ export class AuthService implements AuthServiceIntrf {
                 companyId: companyId,
                 pwHash: pwHash,
                 pwSalt: pwSalt,
-                userSecretToken: userSecretToken
+                userSecretToken: userSecretToken,
             };
             const newManager = (await this.userRepo.insertNewManagerUser(user))
                 .rows[0];
-                        
+
             // TEMP: fire and forget
             // TODO: emit notification event
             this.notificationService.sendAccountVerificationEmail({
@@ -77,6 +80,40 @@ export class AuthService implements AuthServiceIntrf {
     }
     async logoutUser() {
         return "logout user serv";
+    }
+    async authenticateAppliance(data: ApplianceLogin) {
+        // get user by name, check isVerified, check pw
+        // gen access token
+        const result = await this.userRepo.getUserByName(data.name);
+        if (result.rowCount === 0) {
+            throw new AuthenticationError("Invalid login credentials");
+        }
+        const userFromDB = result.rows[0];
+
+        if (!userFromDB["is_verified"]) {
+            throw new AuthenticationError("Not verified user");
+        }
+
+        const isValidPw = await this.bcrypt.compare(
+            data.password,
+            userFromDB["pw_hash"]
+        );
+        if (!isValidPw) {
+            throw new AuthenticationError("Invalid login credentials");
+        }
+
+        const payload: AccessTokenPayload = {
+            userId: userFromDB["user_id"],
+            restaurantId: userFromDB["restaurant_id"],
+            companyId: userFromDB["company_id"],
+            roleId: userFromDB["role_id"],
+        };
+        const accessToken = await genAccessToken(payload);
+        const applianceUser = {
+            name: userFromDB["name"],
+            roleId: userFromDB["role_id"],
+        };
+        return { applianceUser, accessToken };
     }
     async registerNewNonManagerUser(data: UserRegural) {
         const { name, password, roleId, restaurantId, companyId } = data;
@@ -104,29 +141,39 @@ export class AuthService implements AuthServiceIntrf {
             throw err;
         }
     }
-    async setVerifiedUser(token: string){
+    async setVerifiedUser(token: string) {
         try {
-            const verification = await this.authRepo.updateUserIsVerifiedToTrue(token);
-            if(verification.rowCount! > 1){
+            const verification =
+                await this.authRepo.updateUserIsVerifiedToTrue(token);
+            if (verification.rowCount! > 1) {
                 // az baj!
-                logger.error({count: verification.rowCount}, "Multiple rows were updated during user verification");
+                logger.error(
+                    { count: verification.rowCount },
+                    "Multiple rows were updated during user verification"
+                );
             }
             return verification;
-        } catch(err) {
+        } catch (err) {
             logger.error(err, "User verification failed");
             throw new UserVerificationError("User verification failed");
         }
     }
-    async setVerifiedUserFalse(userId: string){
-        try{
-            const setFasle = await this.authRepo.updateUserIsVerifiedToFalse(userId);
-            if(setFasle.rowCount! > 1){
-                logger.error({count: setFasle.rowCount}, "Multiple rows were updated during disabling user verification");
+    async setVerifiedUserFalse(userId: string) {
+        try {
+            const setFasle =
+                await this.authRepo.updateUserIsVerifiedToFalse(userId);
+            if (setFasle.rowCount! > 1) {
+                logger.error(
+                    { count: setFasle.rowCount },
+                    "Multiple rows were updated during disabling user verification"
+                );
             }
             return setFasle;
-        } catch(err) {
+        } catch (err) {
             logger.error(err, "Disabling user verification failed");
-            throw new UserVerificationError("Disabling user verification failed");
+            throw new UserVerificationError(
+                "Disabling user verification failed"
+            );
         }
     }
 }

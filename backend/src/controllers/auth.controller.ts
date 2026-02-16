@@ -4,6 +4,7 @@ import { AuthSchemasInterf } from "../schemas/auth.schema.js";
 import AuthService from "../services/auth.service.js";
 import { BadRequestError, ValidationError } from "../errors/index.js";
 import z from "zod";
+import config from "../config/index.js";
 
 interface AuthControllerInterf {}
 class AuthController implements AuthControllerInterf {
@@ -69,6 +70,45 @@ class AuthController implements AuthControllerInterf {
             return res.status(200).json({ message: "hello from logout" });
         };
     }
+    loginAppliance(): RequestHandler {
+        return async (req, res, next) => {
+            const { data, error } =
+                this.authSchemas.applianceLoginInputSchema.safeParse(req.body);
+            if (error) {
+                throw new ValidationError(z.flattenError(error).fieldErrors);
+            }
+            try {
+                const { applianceUser, accessToken } =
+                    await this.authService.authenticateAppliance(data);
+
+                res.cookie("accessToken", accessToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite:
+                        process.env.NODE_ENV === "production" ? "none" : "lax",
+                    maxAge: config.ACCESS_TOKEN_EXP_MS,
+                });
+                res.cookie("applianceUser", applianceUser, {
+                    httpOnly: false,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite:
+                        process.env.NODE_ENV === "production" ? "none" : "lax",
+                    maxAge: config.ACCESS_TOKEN_EXP_MS,
+                });
+                return res
+                    .status(200)
+                    .json({ message: "authenticated successfully" });
+            } catch (err) {
+                return next(err);
+            }
+        };
+    }
+    logoutAppliance(): RequestHandler {
+        return async (req, res, next) => {
+            // pass further to service - clear cookies
+            return "ok";
+        };
+    }
     registerNonManagerUser(): RequestHandler<
         unknown,
         unknown,
@@ -107,27 +147,35 @@ class AuthController implements AuthControllerInterf {
             }
         };
     }
-    setUserToVerified(): RequestHandler{
-        return async (req, res, next)=>{
-            const {token} = req.params;
+    setUserToVerified(): RequestHandler {
+        return async (req, res, next) => {
+            const { token } = req.params;
             try {
-                const verifying = await this.authService.setVerifiedUser(token as string);
-                return res.status(202).json({message: "user verified successfully."});
-            } catch(err){
+                const verifying = await this.authService.setVerifiedUser(
+                    token as string
+                );
+                return res
+                    .status(202)
+                    .json({ message: "user verified successfully." });
+            } catch (err) {
                 return next(err);
             }
-        }
+        };
     }
-    disableUserVerification(): RequestHandler{
-        return async (req,res,next)=>{
-            const {userId} = req.body;
+    disableUserVerification(): RequestHandler {
+        return async (req, res, next) => {
+            const { userId } = req.body;
             try {
-                const disabling = await this.authService.setVerifiedUserFalse(userId as string);
-                return res.status(202).json({message: "user verification disabled successfully."});
-            } catch(err) {
+                const disabling = await this.authService.setVerifiedUserFalse(
+                    userId as string
+                );
+                return res.status(202).json({
+                    message: "user verification disabled successfully.",
+                });
+            } catch (err) {
                 return next(err);
             }
-        }
+        };
     }
 }
 
