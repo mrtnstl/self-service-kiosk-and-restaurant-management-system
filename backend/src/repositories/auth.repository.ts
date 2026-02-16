@@ -12,7 +12,7 @@ export class AuthRepo {
     }
     async updateUserIsVerifiedToTrue(userSecret: string) {
         const result = await this.pool.query(
-            "UPDATE users SET is_verified = true WHERE user_secret_token = $1;",
+            "UPDATE users SET is_verified = true, user_secret_token = NULL WHERE user_secret_token = $1;",
             [userSecret]
         );
         return result;
