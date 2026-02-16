@@ -1,3 +1,5 @@
+import { UserVerificationError } from "../errors/index.js";
+import AuthRepo from "../repositories/auth.repository.js";
 import UserRepo from "../repositories/user.repository.js";
 import {
     UserManager,
@@ -6,17 +8,20 @@ import {
     UserReguralNew,
 } from "../types/user.js";
 import { BcryptInterf } from "../types/utility.js";
+import logger from "../utils/logger.js";
 import NotificationService from "./external/notification.service.js";
 
 export interface AuthServiceIntrf {}
 export class AuthService implements AuthServiceIntrf {
     private static instance: AuthService;
     userRepo!: UserRepo;
+    authRepo!: AuthRepo;
     notificationService!: NotificationService;
     bcrypt!: BcryptInterf;
 
     constructor(
         userRepo: UserRepo,
+        authRepo: AuthRepo,
         notificationService: NotificationService,
         bcrypt: BcryptInterf
     ) {
@@ -24,6 +29,7 @@ export class AuthService implements AuthServiceIntrf {
             return AuthService.instance;
         }
         this.userRepo = userRepo;
+        this.authRepo = authRepo;
         this.notificationService = notificationService;
         this.bcrypt = bcrypt;
         AuthService.instance = this;
@@ -40,22 +46,25 @@ export class AuthService implements AuthServiceIntrf {
             const pwSalt = await this.bcrypt.genSalt(8);
             const pwHash = await this.bcrypt.hash(password, pwSalt);
 
+            const userSecretToken = crypto.randomUUID();
+
             const user: UserManagerNew = {
                 name: name,
                 email: email,
                 companyId: companyId,
                 pwHash: pwHash,
                 pwSalt: pwSalt,
+                userSecretToken: userSecretToken
             };
             const newManager = (await this.userRepo.insertNewManagerUser(user))
                 .rows[0];
-
+                        
             // TEMP: fire and forget
             // TODO: emit notification event
             this.notificationService.sendAccountVerificationEmail({
                 email: newManager.email,
                 name: newManager.name,
-                accountVerificationSecret: "some_secret_123",
+                accountVerificationSecret: newManager.usersecrettoken,
             });
 
             return newManager;
@@ -64,13 +73,9 @@ export class AuthService implements AuthServiceIntrf {
         }
     }
     async loginUser() {
-        // TODO: call user repo, getUserByEmailOrName, create token, set cookie(s)
-        // respond
         return "login user serv";
     }
     async logoutUser() {
-        // TODO: destroy token and clear cookie(s)
-        // respond
         return "logout user serv";
     }
     async registerNewNonManagerUser(data: UserRegural) {
@@ -97,6 +102,31 @@ export class AuthService implements AuthServiceIntrf {
             return newUser;
         } catch (err: any) {
             throw err;
+        }
+    }
+    async setVerifiedUser(token: string){
+        try {
+            const verification = await this.authRepo.updateUserIsVerifiedToTrue(token);
+            if(verification.rowCount! > 1){
+                // az baj!
+                logger.error({count: verification.rowCount}, "Multiple rows were updated during user verification");
+            }
+            return verification;
+        } catch(err) {
+            logger.error(err, "User verification failed");
+            throw new UserVerificationError("User verification failed");
+        }
+    }
+    async setVerifiedUserFalse(userId: string){
+        try{
+            const setFasle = await this.authRepo.updateUserIsVerifiedToFalse(userId);
+            if(setFasle.rowCount! > 1){
+                logger.error({count: setFasle.rowCount}, "Multiple rows were updated during disabling user verification");
+            }
+            return setFasle;
+        } catch(err) {
+            logger.error(err, "Disabling user verification failed");
+            throw new UserVerificationError("Disabling user verification failed");
         }
     }
 }

@@ -107,6 +107,28 @@ class AuthController implements AuthControllerInterf {
             }
         };
     }
+    setUserToVerified(): RequestHandler{
+        return async (req, res, next)=>{
+            const {token} = req.params;
+            try {
+                const verifying = await this.authService.setVerifiedUser(token as string);
+                return res.status(202).json({message: "user verified successfully."});
+            } catch(err){
+                return next(err);
+            }
+        }
+    }
+    disableUserVerification(): RequestHandler{
+        return async (req,res,next)=>{
+            const {userId} = req.body;
+            try {
+                const disabling = await this.authService.setVerifiedUserFalse(userId as string);
+                return res.status(202).json({message: "user verification disabled successfully."});
+            } catch(err) {
+                return next(err);
+            }
+        }
+    }
 }
 
 export default AuthController;

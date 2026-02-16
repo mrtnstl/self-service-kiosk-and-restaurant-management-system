@@ -7,12 +7,14 @@ import NotificationService from "../services/external/notification.service.js";
 import { sendEmail } from "../services/external/sendgrid/sendgrid.js";
 import config from "../config/index.js";
 import bcrypt from "bcrypt";
+import AuthRepo from "../repositories/auth.repository.js";
 
 export function createAuthController(): AuthController {
     const userRepo = new UserRepo(pool);
     const notificationService = new NotificationService(sendEmail, config);
+    const authRepo = new AuthRepo(pool);
 
-    const authService = new AuthService(userRepo, notificationService, bcrypt);
+    const authService = new AuthService(userRepo, authRepo, notificationService, bcrypt);
 
     return new AuthController(authSchemas, authService);
 }

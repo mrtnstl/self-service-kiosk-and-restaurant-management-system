@@ -17,16 +17,18 @@ export class UserRepo {
         companyId,
         pwHash,
         pwSalt,
+        userSecretToken
     }: {
         name: string;
         email: string;
         companyId: string;
         pwHash: string;
         pwSalt: string;
-    }): Promise<QueryResult<{ name: string; email: string }>> {
+        userSecretToken: string;
+    }): Promise<QueryResult<{ name: string; email: string, usersecrettoken: string }>> {
         const result = await this.pool.query(
-            "INSERT INTO users (name, email, company_id, role_id, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6) RETURNING name, email;",
-            [name, email, companyId, 1, pwHash, pwSalt]
+            "INSERT INTO users (name, email, company_id, role_id, is_verified, user_secret_token, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING name, email, user_secret_token AS usersecrettoken;",
+            [name, email, companyId, 1, false, userSecretToken, pwHash, pwSalt]
         );
         return result;
     }

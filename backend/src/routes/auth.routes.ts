@@ -12,6 +12,8 @@ authRouter.post(
     "/create-non-manager",
     /* authMW, autorizMW*/ authContrlr.registerNonManagerUser()
 );
+authRouter.get("/verify/:token", authContrlr.setUserToVerified());
+authRouter.put("/disable", authContrlr.disableUserVerification());
 // TODO: forgot pw, set new pw
 
 export default authRouter;

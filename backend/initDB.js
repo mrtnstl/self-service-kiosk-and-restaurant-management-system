@@ -46,6 +46,8 @@ const tables = {
             name VARCHAR(50) NOT NULL,
             email VARCHAR(100) DEFAULT '', --managers only
             role_id INT DEFAULT NULL,
+            is_verified BOOLEAN DEFAULT false,
+            user_secret_token UUID DEFAULT NULL,
             pw_hash TEXT NOT NULL,
             pw_salt TEXT NOT NULL,
             created_at TIMESTAMPTZ DEFAULT NOW()
