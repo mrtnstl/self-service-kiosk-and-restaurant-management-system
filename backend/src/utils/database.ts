@@ -20,7 +20,7 @@ pool.on("error", (err, _client) => {
 export async function testDBConn() {
     const isAlive = (await pool.query("SELECT true as isAlive;")).rows[0]
         .isalive;
-    console.log("is db alive:", isAlive);
+    config.NODE_ENV === "development" && console.log("is db alive:", isAlive);
 }
 
 export default pool;
