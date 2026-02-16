@@ -1,30 +1,32 @@
-import { ObjectRepo } from "../utils/DI.js";
+import { Pool } from "pg";
 
 export interface CompanyRepoIntrf {}
-export class CompanyRepo implements CompanyRepoIntrf{
+export class CompanyRepo implements CompanyRepoIntrf {
     private static instance: CompanyRepo;
-    constructor() {
+    pool!: Pool;
+    constructor(pool: Pool) {
         if (CompanyRepo.instance) {
             return CompanyRepo.instance;
         }
+        this.pool = pool;
         CompanyRepo.instance = this;
     }
     // company profile
-    async insertNewCompany(objectRepo: ObjectRepo, {
+    async insertNewCompany({
         name,
         logoUrl,
     }: {
         name: string;
         logoUrl: string;
     }) {
-        const result = await objectRepo.pool.query(
+        const result = await this.pool.query(
             "INSERT INTO companies (name, logo) VALUES ($1, $2) RETURNING id as company_id;",
             [name, logoUrl]
         );
         return result;
     }
-    async getCompanyByName(objectRepo: ObjectRepo, name: string) {
-        const result = await objectRepo.pool.query(
+    async getCompanyByName(name: string) {
+        const result = await this.pool.query(
             "SELECT id, name FROM companies WHERE name = $1;",
             [name]
         );

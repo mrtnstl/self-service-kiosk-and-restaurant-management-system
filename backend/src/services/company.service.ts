@@ -1,25 +1,25 @@
-import { ObjectRepo } from "../utils/DI.js";
+import CompanyRepo from "../repositories/company.repository.js";
 
-export interface CompanyServiceIntrf {}
-
-export class CompanyService implements CompanyServiceIntrf{
+export class CompanyService {
     private static instance: CompanyService;
-    constructor() {
+    companyRepo!: CompanyRepo;
+    constructor(companyRepo: CompanyRepo) {
         if (CompanyService.instance) {
             return CompanyService.instance;
         }
+        this.companyRepo = companyRepo;
         CompanyService.instance = this;
     }
-    async registerNewCompany(objectRepo: ObjectRepo, data: {name: string, logoUrl: string}) {
-        const {repos} = objectRepo;
+    async registerNewCompany(data: { name: string; logoUrl: string }) {
         try {
-            const existingCompany =
-                await repos.CompanyRepo.getCompanyByName(objectRepo, data.name);
+            const existingCompany = await this.companyRepo.getCompanyByName(
+                data.name
+            );
             if (existingCompany.rows.length > 0) {
                 throw new Error("company already exists.");
             }
-            
-            const result = await repos.CompanyRepo.insertNewCompany(objectRepo, data);
+
+            const result = await this.companyRepo.insertNewCompany(data);
             return result.rows[0]["company_id"];
         } catch (err) {
             throw err;

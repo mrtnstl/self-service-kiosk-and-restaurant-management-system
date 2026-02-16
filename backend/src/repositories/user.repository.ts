@@ -1,16 +1,17 @@
-import { ObjectRepo } from "../utils/DI.js";
+import { Pool, QueryResult } from "pg";
 
-export interface UserRepoIntrf {}
-export class UserRepo implements UserRepoIntrf {
+export class UserRepo {
     private static instance: UserRepo;
-    constructor() {
+    pool!: Pool;
+    constructor(pool: Pool) {
         if (UserRepo.instance) {
             return UserRepo.instance;
         }
+        this.pool = pool;
         UserRepo.instance = this;
     }
     // create manager account, fixed manager role (after company profile creation)
-    async insertNewManagerUser(objectRepo: ObjectRepo, {
+    async insertNewManagerUser({
         name,
         email,
         companyId,
@@ -22,29 +23,29 @@ export class UserRepo implements UserRepoIntrf {
         companyId: string;
         pwHash: string;
         pwSalt: string;
-    }) {
-        const result = await objectRepo.pool.query(
-            "INSERT INTO users (name, email, company_id, role_id, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6);",
+    }): Promise<QueryResult<{ name: string; email: string }>> {
+        const result = await this.pool.query(
+            "INSERT INTO users (name, email, company_id, role_id, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6) RETURNING name, email;",
             [name, email, companyId, 1, pwHash, pwSalt]
         );
         return result;
     }
-    async getUserByEmail(objectRepo: ObjectRepo, email: string) {
-        const result = await objectRepo.pool.query(
+    async getUserByEmail(email: string) {
+        const result = await this.pool.query(
             "SELECT id, name, email FROM users WHERE email = $1;",
             [email]
         );
         return result;
     }
-    async getUserByName(objectRepo: ObjectRepo, name: string) {
-        const result = await objectRepo.pool.query(
+    async getUserByName(name: string) {
+        const result = await this.pool.query(
             "SELECT id, name, email FROM users WHERE name = $1;",
             [name]
         );
         return result;
     }
     // company managers can create interanl users, non-manager roles
-    async insertNewInternalUser(objectRepo: ObjectRepo, {
+    async insertNewInternalUser({
         name,
         roleId,
         restaurantId,
@@ -59,7 +60,7 @@ export class UserRepo implements UserRepoIntrf {
         pwHash: string;
         pwSalt: string;
     }) {
-        const result = await objectRepo.pool.query(
+        const result = await this.pool.query(
             "INSERT INTO users (name, company_id, restaurant_id, role_id, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6);",
             [name, companyId, restaurantId, roleId, pwHash, pwSalt]
         );
