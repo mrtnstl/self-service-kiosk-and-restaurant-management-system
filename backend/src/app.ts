@@ -7,6 +7,7 @@ import cors from "cors";
 import gracefulShutdown from "./utils/gracefulShutdown.js";
 import { testDBConn } from "./utils/database.js";
 import { initRoutes } from "./routes/index.js";
+import reqLoggerMW from "./middleware/reqLoggerMW.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ const PORT = config.PORT;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(config.CORS_OPTIONS));
+app.use(reqLoggerMW());
 
 (async () => {
     await testDBConn();
