@@ -2,8 +2,6 @@ import { Outlet, Navigate, useLocation } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 
 const ProtectedRoutes = ({allowedRoles}:{allowedRoles: number[]}) => {
-    // TODO: store user data in authContext. user data resides in acclianceData 
-    // or userData cookie(this is not the access token!, just plain text)
     const location= useLocation();
     const {user} = useAuth()
     
