@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { UUID } from "node:crypto";
 import * as express from "express";
+import { AccessTokenPayload } from "./token.ts";
 
 type CreateNonManagerUserBodyType = {
     name: string;
@@ -17,7 +18,7 @@ type UserPayload = {
 declare global {
     namespace Express {
         interface Request {
-            user: UserPayload;
+            user: AccessTokenPayload;
         }
     }
 }
