@@ -29,7 +29,7 @@ const config: Config = {
     FRONTEND_URL: process.env.FRONTEND_URL as string,
     DATABASE_CONNECTION_STRING: process.env
         .DATABASE_CONNECTION_STRING as string,
-    CORS_OPTIONS: { origin: process.env.FRONTEND_URL || "", credentials: true },
+    CORS_OPTIONS: { origin: process.env.FRONTEND_URL as string, credentials: true },
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
     ACCESS_TOKEN_EXP_MS: parseInt(process.env.ACCESS_TOKEN_EXP as string),
     ROLES: ROLES,
