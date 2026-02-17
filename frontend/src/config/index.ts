@@ -16,7 +16,7 @@ export interface Config {
     ROLES: Roles;
 }
 const config = {
-    BACKEND_BASE_URL: "http://localhost:3000",
+    BACKEND_BASE_URL: import.meta.env.VITE_BACKEND_BASE_URL as string,
     ROLES: ROLES,
 };
 

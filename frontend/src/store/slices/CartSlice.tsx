@@ -32,62 +32,9 @@ export const CartSlice = createSlice({
             }
         },
         clearItems: (state, _action: PayloadAction) => {
-            state.items = [];
+            state.items = initialState.items;
         }
     }
 });
 
-//export default CartSlice.reducer;
 export const {addItem, removeItem, updateQuantity, clearItems} = CartSlice.actions;
-/*
-export interface CartSlice = Slice<{
-        items: CartItem[];
-    }, {
-        addItem: (state: WritableNonArrayDraft<{
-            items: CartItem[];
-        }>, action: {
-            payload: any;
-            type: string;
-        }) => void;
-        removeItem: (state: WritableNonArrayDraft<{
-            items: CartItem[];
-        }>, action: {
-            payload: any;
-            type: string;
-        }) => void;
-        updateQuantity: (state: WritableNonArrayDraft<{
-            items: CartItem[];
-        }>, action: {
-            payload: any;
-            type: string;
-        }) => void;
-    }, "cart", "cart", SliceSelectors<{
-        items: CartItem[];
-}>>
-
-export const CartSlice: CartSlice = createSlice({
-    name: "cart",
-    initialState: {
-        items: []
-    },
-    reducers: {
-        addItem: (state, action) => {
-            const isAdded = state.items.find(item => item.id === action.payload.id);
-            isAdded ? isAdded.quantity++ : state.items.push({...action.payload, quantity: 1});
-        },
-        removeItem: (state, action) => {
-            state.items = state.items.filter(item => (item.id !== action.payload));
-        },
-        updateQuantity: (state, action) => {
-            const existingItem = state.items.find(item => item.id === action.payload.id);
-            if(existingItem){ 
-                existingItem.quantity = action.payload.quantity;
-            }
-        }
-    }
-});
-
-export const {addItem, removeItem, updateQuantity} = CartSlice.actions;
-
-export default CartSlice.reducer;
-*/
