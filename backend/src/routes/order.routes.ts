@@ -1,14 +1,30 @@
-/*
 import { Router } from "express";
 import { createOrderController } from "../controllers/order.controller.factory.js";
-
+import authenticationMW from "../middleware/authenticationMW.js";
+import authorizationMW from "../middleware/authorizationMW.js";
+import config from "../config/index.js";
+const { ROLES } = config;
 const orderContrlr = createOrderController();
 
 const orderRouter = Router();
 
-orderRouter.post("/", orderContrlr.createOrder());
-orderRouter.get("/pending", orderContrlr.getPendingOrders()); // sse?
-orderRouter.get("/", orderContrlr.closeOrder());
+orderRouter.post(
+    "/",
+    authenticationMW(),
+    authorizationMW([ROLES.KIOSK, ROLES.MANAGER]),
+    orderContrlr.createOrder()
+);
+orderRouter.put(
+    "/state",
+    authenticationMW(),
+    authorizationMW([ROLES.KITCHEN_MONITOR, ROLES.MANAGER]),
+    orderContrlr.changeOrderState()
+);
+orderRouter.get(
+    "/pending",
+    authenticationMW(),
+    authorizationMW([ROLES.KITCHEN_MONITOR, ROLES.MANAGER]),
+    orderContrlr.getPendingOrders()
+); // sse?
 
 export default orderRouter;
-*/

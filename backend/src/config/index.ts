@@ -21,6 +21,7 @@ export interface Config {
     ACCESS_TOKEN_SECRET: string;
     ACCESS_TOKEN_EXP_MS: number;
     ROLES: Roles;
+    ORDER_SERIAL_INITIAL: number;
 }
 const config: Config = {
     PORT: process.env.PORT as string,
@@ -29,10 +30,14 @@ const config: Config = {
     FRONTEND_URL: process.env.FRONTEND_URL as string,
     DATABASE_CONNECTION_STRING: process.env
         .DATABASE_CONNECTION_STRING as string,
-    CORS_OPTIONS: { origin: process.env.FRONTEND_URL as string, credentials: true },
+    CORS_OPTIONS: {
+        origin: process.env.FRONTEND_URL as string,
+        credentials: true,
+    },
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
     ACCESS_TOKEN_EXP_MS: parseInt(process.env.ACCESS_TOKEN_EXP as string),
     ROLES: ROLES,
+    ORDER_SERIAL_INITIAL: 0,
 };
 
 export default config;

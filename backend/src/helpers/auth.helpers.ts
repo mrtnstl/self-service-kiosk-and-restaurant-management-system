@@ -14,12 +14,15 @@ export async function genAccessToken(payload: AccessTokenPayload) {
 }
 export function decodeAccessToken(
     token: string
-): Promise<AccessTokenPayload | Error > {
-    return new Promise((resolve, reject)=> {
+): Promise<AccessTokenPayload | Error> {
+    return new Promise((resolve, reject) => {
         try {
-            const decoded = jwt.verify(token, config.ACCESS_TOKEN_SECRET) as AccessTokenPayload;
+            const decoded = jwt.verify(
+                token,
+                config.ACCESS_TOKEN_SECRET
+            ) as AccessTokenPayload;
             resolve(decoded);
-        } catch(err: any) {
+        } catch (err: any) {
             reject(err);
         }
     });

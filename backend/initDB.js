@@ -88,6 +88,29 @@ const tables = {
         drop: `DROP TABLE IS EXISTS restaurants;`,
         seed: `SELECT NOW();`,
     },
+    orders: {
+        create: `CREATE TABLE IF NOT EXISTS orders (
+            id TEXT PRIMARY KEY,
+            restaurant_id UUID NOT NULL,
+            user_id UUID NOT NULL,
+            state TEXT DEFAULT 'PENDING', -- enum in future
+            serial INT NOT NULL,
+            type TEXT NOT NULL, -- enum in future
+            total_price DOUBLE PRECISION NOT NULL,
+            created_at TIMESTAMPTZ DEFAULT NOW()
+        );`,
+        drop: `DROP TABLE IS EXISTS orders;`,
+        seed: `SELECT NOW();`,
+    },
+    order_items: {
+        create: `CREATE TABLE IF NOT EXISTS order_items (
+            order_id TEXT NOT NULL,
+            dish_id TEXT NOT NULL,
+            quantity INT NOT NULL
+        );`,
+        drop: `DROP TABLE IS EXISTS order_items;`,
+        seed: `SELECT NOW();`,
+    },
 };
 
 execute(tables, "create");

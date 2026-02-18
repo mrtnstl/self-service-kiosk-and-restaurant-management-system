@@ -84,18 +84,16 @@ class AuthController implements AuthControllerInterf {
                 res.cookie("accessToken", accessToken, {
                     httpOnly: true,
                     secure: config.NODE_ENV === "production",
-                    sameSite:
-                        config.NODE_ENV === "production" ? "none" : "lax",
+                    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
                     maxAge: config.ACCESS_TOKEN_EXP_MS,
                 });
                 res.cookie("applianceUser", applianceUser, {
                     httpOnly: false,
                     secure: config.NODE_ENV === "production",
-                    sameSite:
-                        config.NODE_ENV === "production" ? "none" : "lax",
+                    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
                     maxAge: config.ACCESS_TOKEN_EXP_MS,
                 });
-                
+
                 return res
                     .status(200)
                     .json({ message: "authenticated successfully" });

@@ -1,4 +1,4 @@
-import { AuthenticationError, UserVerificationError } from "../errors/index.js";
+import { AuthenticationError, DatabaseError } from "../errors/index.js";
 import { genAccessToken } from "../helpers/auth.helpers.js";
 import AuthRepo from "../repositories/auth.repository.js";
 import UserRepo from "../repositories/user.repository.js";
@@ -103,7 +103,7 @@ export class AuthService implements AuthServiceIntrf {
         }
 
         const payload: AccessTokenPayload = {
-            userId: userFromDB["user_id"],
+            userId: userFromDB["id"],
             restaurantId: userFromDB["restaurant_id"],
             companyId: userFromDB["company_id"],
             roleId: userFromDB["role_id"],
@@ -155,7 +155,7 @@ export class AuthService implements AuthServiceIntrf {
             return verification;
         } catch (err) {
             logger.error(err, "User verification failed");
-            throw new UserVerificationError("User verification failed");
+            throw new DatabaseError("An error occured while proccessing your request");
         }
     }
     async setVerifiedUserFalse(userId: string) {
@@ -171,8 +171,8 @@ export class AuthService implements AuthServiceIntrf {
             return setFasle;
         } catch (err) {
             logger.error(err, "Disabling user verification failed");
-            throw new UserVerificationError(
-                "Disabling user verification failed"
+            throw new DatabaseError(
+                "An error occured while proccessing your request"
             );
         }
     }

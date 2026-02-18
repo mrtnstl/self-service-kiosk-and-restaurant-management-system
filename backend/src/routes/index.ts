@@ -7,6 +7,7 @@ import authRouter from "./auth.routes.js";
 import restaurantRouter from "./restaurant.routes.js";
 import companyRouter from "./company.routes.js";
 import menuRouter from "./menu.routes.js";
+import orderRouter from "./order.routes.js";
 
 // TODO: rate limiting
 export function initRoutes(app: Express) {
@@ -14,6 +15,7 @@ export function initRoutes(app: Express) {
     app.use("/api/v1/auth", authRouter);
     app.use("/api/v1/company", companyRouter);
     app.use("/api/v1/menu", menuRouter);
+    app.use("/api/v1/order", orderRouter);
     app.use(wildcardRouteHandlerMW());
     app.use(globalErrHandlerMW());
 }

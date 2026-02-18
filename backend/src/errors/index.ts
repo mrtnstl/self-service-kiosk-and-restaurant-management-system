@@ -63,15 +63,21 @@ export class NotificationError extends AppError {
     }
 }
 
-// TEMP
-export class UserVerificationError extends AppError {
-    constructor(message = "User verification error") {
-        super(message, 400, true);
+// TODO: delete this! Unauthorized err is enough
+export class AuthenticationError extends UnauthorizedError {
+    constructor(message = "Failed to authenticate user") {
+        super(message);
     }
 }
 
-export class AuthenticationError extends UnauthorizedError {
-    constructor(message = "Failed to authenticate user") {
+export class DatabaseError extends AppError {
+    constructor(message = "Database error"){
+        super(message, 500, false);
+    }
+}
+
+export class DatabaseTransactionError extends DatabaseError {
+    constructor(message = "Database transaction error"){
         super(message);
     }
 }
