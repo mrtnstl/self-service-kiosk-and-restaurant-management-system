@@ -3,7 +3,7 @@ import config from "../../config";
 import { useAuth } from "../../hooks/useAuth";
 import parseAndGetCookie from "../../utils/cookieParser";
 import type { UserData } from "../../context/AuthContext";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 type ApplianceLogin = {
     name: string;
@@ -14,7 +14,9 @@ const LoginPage = () => {
     const [formData, setFormData] = useState<ApplianceLogin>({name: "", password: ""});
     const {user, setUser} = useAuth();
     const navigate = useNavigate();
-    
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/verify";
+
     useEffect(()=>{
         if(user){
             // TODO: fix
@@ -57,7 +59,7 @@ const LoginPage = () => {
             const userData = (parseAndGetCookie("applianceUser") || parseAndGetCookie("reguralUser")) as UserData | null;
             if(userData){
                 setUser(userData);
-
+                navigate(from, {replace: true});
             }
         } catch(err){
             console.log(err)

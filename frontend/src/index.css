@@ -1,16 +1,27 @@
 :root {
+  --color-red-vibr: #FF0004;
+  --color-red: #fc4b4e;
+  --color-grey: #413636;
+  --color-beige: #FFEDC5;
+
+  --color-primary: var(--color-grey);
+  --color-secondary: var(--color-beige);
+  --color-accent: var(--color-red);
+
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--color-primary);
+  background-color: var(--color-secondary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+
 }
 
 a {
@@ -26,7 +37,6 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-
 }
 
 h1 {
@@ -42,12 +52,14 @@ button {
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
+  color: var(--color-accent);
+  font-weight: bold;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 
 button:hover {
-  border-color: #646cff;
+  border-color: var(--color-accent);
 }
 
 button:focus,

@@ -23,8 +23,8 @@ const Checkout = () => {
             dispatch(clearItems());
             dispatch(resetOrderType());
             navigate("/kiosk");
-        },2000);
-    }
+        }, 2000);
+    };
     return (
         <>
             <h1>Checkout</h1>
