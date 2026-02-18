@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { clearItems } from "../../store/slices/CartSlice";
 import { resetOrderType } from "../../store/slices/OrderTypeSlice";
+import config from "../../config";
 
 const Checkout = () => {
     const navigate = useNavigate();
@@ -9,21 +10,43 @@ const Checkout = () => {
     const totalPrice = cartItems.reduce((acc, current)=>(acc + current.price * current.quantity),0);
     const orderType = useAppSelector(state => state.orderType.orderType);
     const dispatch = useAppDispatch();
-    const handleOrderSubmit = () => {
+    const handleOrderSubmit = async () => {
         // TODO: post to be
         const items = cartItems.map(item => ({id: item.id, quantity: item.quantity}));
         const order = {
             type: orderType,
             items: items
         };
+
         console.log("order:", order);
-        // if success, show order serialNr(from be response then), 
-        // get confirmation, clear cart and order type and redirect to first page
-        setTimeout(()=>{
+        try {
+            const reqUrl = new URL(config.BACKEND_BASE_URL + "/api/v1/order");
+            const response = await fetch(reqUrl, {
+                method: "POST",
+                credentials: "include",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(order)
+            });
+            const result = await response.json();
+            if(!response.ok){
+                console.log("FAIL RESPONSE:",response)
+                console.log("FAIL RESULT:",result)
+                return;
+            }
+            console.log("SUCCESS RESULT:",result);
+            // if success, show order serialNr(from be response then), 
+            // get confirmation, clear cart and order type and redirect to first page
             dispatch(clearItems());
             dispatch(resetOrderType());
             navigate("/kiosk");
-        }, 2000);
+            
+        } catch(err){
+            console.log("ERROR:",err);
+        }
+        
     };
     return (
         <>
