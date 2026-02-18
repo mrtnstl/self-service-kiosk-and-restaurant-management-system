@@ -59,15 +59,26 @@ const OrderSelectionMenu = () => {
     return(
         <>
             <h1>Order Selection Menu</h1>
-            <div>
+            <div className="menu__item__wrapper">
             {
                 dishes && dishes.length > 0 
-                ? dishes.map(dish=>(<p key={dish.id} data-dish-id={dish.id} >
-                    {dish.name}
+                ? dishes.map(dish=>(<div className="menu__item__card" key={dish.id} data-dish-id={dish.id} >
+                    <div className="menu__item__image__wrapper">
+                        <small className="menu__item__image__category">{dish.category}</small>
+                        <div className="menu__item__image"></div>
+                        {/*<img className="menu__item__image" src="objectstoreurl" alt="dish_pic" />*/}
+                    </div>
+                    <span>
+                        <h3>{dish.name}</h3>
+                        <p>prepared in {dish.estimated_prep_minutes} minutes</p>
+                    </span>
+                    <div>
+                        <p>&euro; {dish.min_price}</p>
+                    </div>
                     <button onClick={handleAddItem}>
                         add
                     </button>
-                    </p>))
+                    </div>))
                 : <p>no dishes available</p>
             }
             </div>

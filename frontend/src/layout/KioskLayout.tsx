@@ -8,7 +8,6 @@ const KioskLayout = () => {
     return (
         <div>
             <header>
-                <h1>kiosk header</h1>
                 <p>cart <span>{cartItemCount}</span></p>
                 <p>order type: {orderType}</p>
             </header>
