@@ -21,7 +21,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-
 }
 
 a {
@@ -36,6 +35,7 @@ a:hover {
 
 body {
   margin: 0;
+  height: 100dvh;
   display: flex;
 }
 
@@ -80,6 +80,35 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.section__kiosk {}
+
+
+.section__kiosk__header {}
+
+
+.kiosk__header_cart-n-order {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+}
+
+.kiosk__header_cart-n-order>p {
+  margin-block: 0;
+}
+
+.kiosk__header_title {
+  margin-block: .6rem .8rem;
+}
+
+.section__kiosk__body {
+  padding-block: 1.4rem;
+  overflow-y: auto;
+}
+
+.section__kiosk__footer {
+  padding-block: .4rem;
 }
 
 .menu__item__wrapper {
@@ -129,3 +158,21 @@ button:focus-visible {
   object-fit: cover;
 
 }
+
+.menu__item__info {}
+
+.menu__item__title {
+  margin-block: 1rem .4rem;
+}
+
+.menu__item__preptime {
+  margin-block: 0rem 1.2rem;
+}
+
+.menu__item__price {
+  margin-block: 0rem 1rem;
+}
+
+.menu__item__button--add {}
+
+.menu__item__button--add:hover {}

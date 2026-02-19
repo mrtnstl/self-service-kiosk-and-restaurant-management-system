@@ -76,7 +76,7 @@ const LoginPage = () => {
             </span>
             <span>
                 <label htmlFor="password">password</label>
-                <input type="text" name="password" id="password" 
+                <input type="password" name="password" id="password" 
                 value={formData?.password || ""} onChange={handleChange}/>
             </span>
             <input type="submit" value="LOGIN" />

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import config from "../../config";
-import { useAppDispatch } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { addItem } from "../../store/slices/CartSlice";
+import OrderHeader from "./OrderHeader";
 
 type Dish = {
     category: string;
@@ -58,8 +59,8 @@ const OrderSelectionMenu = () => {
     }
     return(
         <>
-            <h1>Order Selection Menu</h1>
-            <div className="menu__item__wrapper">
+            <OrderHeader title={"Menu"} />
+            <div className="menu__item__wrapper section__kiosk__body">
             {
                 dishes && dishes.length > 0 
                 ? dishes.map(dish=>(<div className="menu__item__card" key={dish.id} data-dish-id={dish.id} >
@@ -68,21 +69,19 @@ const OrderSelectionMenu = () => {
                         <div className="menu__item__image"></div>
                         {/*<img className="menu__item__image" src="objectstoreurl" alt="dish_pic" />*/}
                     </div>
-                    <span>
-                        <h3>{dish.name}</h3>
-                        <p>prepared in {dish.estimated_prep_minutes} minutes</p>
+                    <span className="menu__item__info">
+                        <h3 className="menu__item__title">{dish.name}</h3>
+                        <p className="menu__item__preptime">prepared in {dish.estimated_prep_minutes} minutes</p>
                     </span>
-                    <div>
-                        <p>&euro; {dish.min_price}</p>
-                    </div>
-                    <button onClick={handleAddItem}>
+                    <p className="menu__item__price">&euro; {dish.min_price}</p>
+                    <button className="menu__item__button--add" onClick={handleAddItem}>
                         add
                     </button>
                     </div>))
                 : <p>no dishes available</p>
             }
             </div>
-            <div>
+            <div className="section__kiosk__footer">
                 <button onClick={()=>navigate("/kiosk")}>BACK</button>
                 <button onClick={()=>navigate("/kiosk/checkout")}>TO CHECKOUT</button>
             </div>

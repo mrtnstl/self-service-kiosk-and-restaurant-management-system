@@ -2,7 +2,9 @@ import { useNavigate } from "react-router";
 
 const Nav = ()=>{
     const navigate = useNavigate();
-    return (
+    const showNav = false;
+
+    return ( showNav ? 
         <nav id="main__nav">
             <button onClick={()=>navigate("/")}>
                 Login
@@ -20,6 +22,8 @@ const Nav = ()=>{
             non-existent
             </button>     
         </nav>
+        :
+        <></>
     )
 };
 

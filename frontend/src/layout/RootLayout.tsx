@@ -3,10 +3,10 @@ import Nav from "../components/Nav";
 
 const RootLayout = ()=>{
     return (
-        <main>
+        <>
             <Nav />
             <Outlet />
-        </main>
+        </>
     )
 }
 

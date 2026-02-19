@@ -3,12 +3,14 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { clearItems } from "../../store/slices/CartSlice";
 import { resetOrderType } from "../../store/slices/OrderTypeSlice";
 import config from "../../config";
+import OrderHeader from "./OrderHeader";
 
 const Checkout = () => {
-    const navigate = useNavigate();
-    const cartItems = useAppSelector((state)=>state.cart.items);
-    const totalPrice = cartItems.reduce((acc, current)=>(acc + current.price * current.quantity),0);
+    const cartItems = useAppSelector(state=>state.cart.items);
     const orderType = useAppSelector(state => state.orderType.orderType);
+
+    const navigate = useNavigate();
+    const totalPrice = cartItems.reduce((acc, current)=>(acc + current.price * current.quantity),0);
     const dispatch = useAppDispatch();
     const handleOrderSubmit = async () => {
         // TODO: post to be
@@ -50,19 +52,19 @@ const Checkout = () => {
     };
     return (
         <>
-            <h1>Checkout</h1>
+            <OrderHeader title={"Checkout"} />
             <div>
                 {
                 cartItems && cartItems.length > 0 
                 ? cartItems.map(item => (<p key={item.id}>{item.name} - {item.quantity}</p>))
                 : <p>no item in cart</p>
-            }
+                }
+                <div>
+                    <p>total price:</p>
+                    <p>EUR {totalPrice.toFixed(2)}</p>
+                </div>
             </div>
-            <div>
-                <p>total price:</p>
-                <p>EUR {totalPrice.toFixed(2)}</p>
-            </div>
-            <div>
+            <div className="section__kiosk__footer">
                 <button onClick={()=>navigate("/kiosk/menu")}>BACK</button>
                 <button onClick={handleOrderSubmit}>DONE</button>
             </div>
