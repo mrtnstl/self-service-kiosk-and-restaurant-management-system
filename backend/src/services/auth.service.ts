@@ -14,8 +14,7 @@ import { BcryptInterf } from "../types/utility.js";
 import logger from "../utils/logger.js";
 import NotificationService from "./external/notification.service.js";
 
-export interface AuthServiceIntrf {}
-export class AuthService implements AuthServiceIntrf {
+export class AuthService {
     private static instance: AuthService;
     userRepo!: UserRepo;
     authRepo!: AuthRepo;
@@ -82,15 +81,13 @@ export class AuthService implements AuthServiceIntrf {
         return "logout user serv";
     }
     async authenticateAppliance(data: ApplianceLogin) {
-        // get user by name, check isVerified, check pw
-        // gen access token
         const result = await this.userRepo.getUserByName(data.name);
         if (result.rowCount === 0) {
             throw new AuthenticationError("Invalid login credentials");
         }
         const userFromDB = result.rows[0];
 
-        if (!userFromDB["is_verified"]) {
+        if (!userFromDB["is_verified"] || !userFromDB["restaurant_id"]) {
             throw new AuthenticationError("Not verified user");
         }
 
@@ -115,7 +112,7 @@ export class AuthService implements AuthServiceIntrf {
         };
         return { applianceUser, accessToken };
     }
-    async registerNewNonManagerUser(data: UserRegural) {
+    async registerNewApplianceUser(data: UserRegural) {
         const { name, password, roleId, restaurantId, companyId } = data;
         try {
             const existingUser = await this.userRepo.getUserByName(name);
@@ -135,7 +132,7 @@ export class AuthService implements AuthServiceIntrf {
                 pwSalt: pwSalt,
             };
 
-            const newUser = await this.userRepo.insertNewInternalUser(user);
+            const newUser = await this.userRepo.insertNewApplianceUser(user);
             return newUser;
         } catch (err: any) {
             throw err;
@@ -155,7 +152,9 @@ export class AuthService implements AuthServiceIntrf {
             return verification;
         } catch (err) {
             logger.error(err, "User verification failed");
-            throw new DatabaseError("An error occured while proccessing your request");
+            throw new DatabaseError(
+                "An error occured while proccessing your request"
+            );
         }
     }
     async setVerifiedUserFalse(userId: string) {

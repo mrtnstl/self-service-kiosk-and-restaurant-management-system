@@ -18,7 +18,7 @@ class OrderController {
     }
     createOrder(): RequestHandler {
         return async (req, res, _next) => {
-            const {companyId, userId, restaurantId } = req.user;
+            const { companyId, userId, restaurantId } = req.user;
             const { type, items } = req.body || {};
             if (typeof type === "undefined" || typeof items === "undefined") {
                 throw new BadRequestError("Invalid arguments");
@@ -30,9 +30,12 @@ class OrderController {
             if (error) {
                 throw new ValidationError(z.flattenError(error).fieldErrors);
             }
-            
-            const orderOrigin = {companyId, userId, restaurantId}
-            const newOrder = await this.orderService.createNewOrder(data, orderOrigin);
+
+            const orderOrigin = { companyId, userId, restaurantId };
+            const newOrder = await this.orderService.createNewOrder(
+                data,
+                orderOrigin
+            );
             return res.status(201).json(newOrder);
         };
     }
@@ -53,7 +56,7 @@ class OrderController {
             }
 
             const changedOrder = await this.orderService.changeOrderState(data);
-            return res.status(201).json(changedOrder);
+            return res.status(200).json(changedOrder);
         };
     }
     getPendingOrders(): RequestHandler {

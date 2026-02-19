@@ -1,6 +1,10 @@
 import config from "../config/index.js";
 
-function genOrderId( companyId: string, userId: string, restaurantId: string): string{
+function genOrderId(
+    companyId: string,
+    userId: string,
+    restaurantId: string
+): string {
     const companyPrefix = companyId.slice(0, 3);
     const restaurantPrefix = restaurantId.slice(0, 3);
     const userPrefix = userId.slice(0, 3);
@@ -8,11 +12,13 @@ function genOrderId( companyId: string, userId: string, restaurantId: string): s
     return `${companyPrefix}_${restaurantPrefix}_${userPrefix}_${now}`;
 }
 
-function createCounter(){
+function createCounter() {
     const initial = config.ORDER_SERIAL_INITIAL;
+    let idx = initial;
     return () => {
-        return initial + 1;
-    }
+        idx++;
+        return idx;
+    };
 }
 const getNextSerial = createCounter();
 
@@ -22,7 +28,8 @@ export interface IOrderHelpers {
 }
 
 const orderHelpers: IOrderHelpers = {
-    genOrderId, getNextSerial
+    genOrderId,
+    getNextSerial,
 };
 
 export default orderHelpers;

@@ -24,7 +24,7 @@ class NotificationService {
         accountVerificationSecret: string;
     }): Promise<void> {
         try {
-            this.config.NODE_ENV !== "production"
+            this.config.IS_NOTIF_ON === false
                 ? logger.info({
                       to: user.email,
                       subject:
@@ -55,7 +55,7 @@ class NotificationService {
         passwordResetSecret: string;
     }): Promise<void> {
         try {
-            this.config.NODE_ENV !== "production"
+            this.config.IS_NOTIF_ON === false
                 ? logger.info({
                       to: user.email,
                       subject:

@@ -1,4 +1,4 @@
-import { Pool, QueryResult } from "pg";
+import { Pool } from "pg";
 
 export class AuthRepo {
     private static instance: AuthRepo;

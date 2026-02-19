@@ -6,8 +6,7 @@ import { BadRequestError, ValidationError } from "../errors/index.js";
 import z from "zod";
 import config from "../config/index.js";
 
-interface AuthControllerInterf {}
-class AuthController implements AuthControllerInterf {
+class AuthController {
     private static instance: AuthController;
     authSchemas!: AuthSchemasInterf;
     authService!: AuthService;
@@ -108,7 +107,7 @@ class AuthController implements AuthControllerInterf {
             return "ok";
         };
     }
-    registerNonManagerUser(): RequestHandler<
+    registerApplianceUser(): RequestHandler<
         unknown,
         unknown,
         CreateNonManagerUserBodyType,
@@ -135,7 +134,7 @@ class AuthController implements AuthControllerInterf {
             }
 
             try {
-                const result = await this.authService.registerNewNonManagerUser(
+                const result = await this.authService.registerNewApplianceUser(
                     data!
                 );
                 return res

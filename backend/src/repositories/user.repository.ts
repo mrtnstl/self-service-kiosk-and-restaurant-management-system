@@ -49,7 +49,7 @@ export class UserRepo {
         return result;
     }
     // company managers can create internal users, non-manager roles
-    async insertNewInternalUser({
+    async insertNewApplianceUser({
         name,
         roleId,
         restaurantId,
@@ -65,8 +65,8 @@ export class UserRepo {
         pwSalt: string;
     }) {
         const result = await this.pool.query(
-            "INSERT INTO users (name, company_id, restaurant_id, role_id, pw_hash, pw_salt) VALUES ($1, $2, $3, $4, $5, $6);",
-            [name, companyId, restaurantId, roleId, pwHash, pwSalt]
+            "INSERT INTO users (name, company_id, restaurant_id, role_id, pw_hash, pw_salt, is_verified) VALUES ($1, $2, $3, $4, $5, $6, $7);",
+            [name, companyId, restaurantId, roleId, pwHash, pwSalt, true]
         );
         return result;
     }

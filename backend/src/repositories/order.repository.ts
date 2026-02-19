@@ -20,29 +20,33 @@ export class OrderRepo {
         OrderRepo.instance = this;
     }
     async calcTotalPrice(itemIdArray: string[], itemQuantityArray: number[]) {
-        const total = await this.pool.query(`
+        const total = await this.pool.query(
+            `
             SELECT COALESCE(SUM(d.min_price * i.quantity::DOUBLE PRECISION), 0)::NUMERIC AS total_amount,
             COUNT(d.id)::INT AS found_items,
             array_length($1, 1)::INT AS requested_items
             FROM UNNEST($1::TEXT[], $2::INT[]) AS i(id, quantity)
             LEFT JOIN dishes d ON d.id = i.id;
-            `, 
-            [itemIdArray, itemQuantityArray]);
-        
+            `,
+            [itemIdArray, itemQuantityArray]
+        );
+
         return total;
     }
-    async insertNewOrder(order: NewOrderUserInput, 
-        orderOrigin: {userId: string, restaurantId: string},
+    async insertNewOrder(
+        order: NewOrderUserInput,
+        orderOrigin: { userId: string; restaurantId: string },
         orderId: string,
         serial: number,
-        totalPrice: number) {
-
+        totalPrice: number
+    ) {
         const client = await this.pool.connect();
 
-        try{
+        try {
             await client.query("BEGIN");
 
-            const orderResult = await client.query(`
+            const orderResult = await client.query(
+                `
                 INSERT INTO orders (
                     id, 
                     user_id, 
@@ -53,15 +57,17 @@ export class OrderRepo {
                     total_price
                 ) VALUES (
                     $1, $2, $3, $4, $5, $6, $7
-                ) RETURNING id;`, [ 
-                    orderId, 
-                    orderOrigin.userId, 
+                ) RETURNING id;`,
+                [
+                    orderId,
+                    orderOrigin.userId,
                     orderOrigin.restaurantId,
                     serial,
                     order.type,
                     "PENDING",
-                    totalPrice
-                ]);
+                    totalPrice,
+                ]
+            );
 
             const returnedId = orderResult.rows[0].id;
 
@@ -72,16 +78,21 @@ export class OrderRepo {
                 itemsQuantityArray.push(item.quantity);
             });
 
-            const itemsResult = await client.query(`
+            const itemsResult = await client.query(
+                `
                 INSERT INTO order_items (order_id, dish_id, quantity) 
                 SELECT $1::TEXT AS order_id, UNNEST($2::TEXT[]) AS dish_id, UNNEST($3::INT[]) AS quantity
-                ;`, [returnedId, itemsIdArray, itemsQuantityArray]);
+                ;`,
+                [returnedId, itemsIdArray, itemsQuantityArray]
+            );
 
             await client.query("COMMIT");
-            return {returnedOrderId: returnedId, success: true};
-        } catch(err){
+            return { returnedOrderId: returnedId, success: true };
+        } catch (err) {
             await client.query("ROLLBACK");
-            throw new DatabaseTransactionError("An error occured while proccessing your data");
+            throw new DatabaseTransactionError(
+                "An error occured while proccessing your data"
+            );
         } finally {
             client.release();
         }
@@ -93,7 +104,7 @@ export class OrderRepo {
         );
         return updatedOrder;
     }
-    async selectPendingOrdersOfCompany(restaurantId: string) {
+    async selectPendingOrdersOfRestaurant(restaurantId: string) {
         const pendingOrders = await this.pool.query(
             `
             SELECT o.id AS order_id, d.name AS dish_name, oi.quantity, o.state, o.serial 

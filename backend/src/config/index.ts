@@ -1,4 +1,4 @@
-type Roles = {
+export type Roles = {
     MANAGER: number;
     KITCHEN_MONITOR: number;
     ORDER_MONITOR: number;
@@ -22,6 +22,7 @@ export interface Config {
     ACCESS_TOKEN_EXP_MS: number;
     ROLES: Roles;
     ORDER_SERIAL_INITIAL: number;
+    IS_NOTIF_ON: boolean;
 }
 const config: Config = {
     PORT: process.env.PORT as string,
@@ -37,7 +38,8 @@ const config: Config = {
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
     ACCESS_TOKEN_EXP_MS: parseInt(process.env.ACCESS_TOKEN_EXP as string),
     ROLES: ROLES,
-    ORDER_SERIAL_INITIAL: 0,
+    ORDER_SERIAL_INITIAL: 1,
+    IS_NOTIF_ON: Boolean(process.env.IS_NOTIF_ON),
 };
 
 export default config;

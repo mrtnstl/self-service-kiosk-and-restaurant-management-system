@@ -21,7 +21,7 @@ authRouter.post(
     "/appliance-register",
     authenticationMW(),
     authorizationMW([config.ROLES.MANAGER]),
-    authContrlr.registerNonManagerUser()
+    authContrlr.registerApplianceUser()
 );
 authRouter.get("/verify/:token", authContrlr.setUserToVerified());
 authRouter.put(

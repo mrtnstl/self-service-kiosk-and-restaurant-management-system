@@ -13,6 +13,7 @@ const app = express();
 
 const PORT = config.PORT;
 
+app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(config.CORS_OPTIONS));

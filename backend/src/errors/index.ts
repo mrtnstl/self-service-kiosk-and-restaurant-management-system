@@ -71,13 +71,13 @@ export class AuthenticationError extends UnauthorizedError {
 }
 
 export class DatabaseError extends AppError {
-    constructor(message = "Database error"){
+    constructor(message = "Database error") {
         super(message, 500, false);
     }
 }
 
 export class DatabaseTransactionError extends DatabaseError {
-    constructor(message = "Database transaction error"){
+    constructor(message = "Database transaction error") {
         super(message);
     }
 }

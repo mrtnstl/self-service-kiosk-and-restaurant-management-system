@@ -1,7 +1,6 @@
 import { Pool } from "pg";
 
-export interface CompanyRepoIntrf {}
-export class CompanyRepo implements CompanyRepoIntrf {
+export class CompanyRepo {
     private static instance: CompanyRepo;
     pool!: Pool;
     constructor(pool: Pool) {

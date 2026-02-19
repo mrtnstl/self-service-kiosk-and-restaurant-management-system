@@ -4,11 +4,16 @@ import CompanyService from "../services/company.service.js";
 import { BadRequestError, ValidationError } from "../errors/index.js";
 import z from "zod";
 
-interface CompanyControllerIntrf {}
-class CompanyController implements CompanyControllerIntrf {
+export interface ICompanyController {
+    readonly companySchemas: CompanySchemasInterf;
+    readonly companyService: CompanyService;
+    register: () => RequestHandler;
+}
+
+class CompanyController implements ICompanyController {
     private static instance: CompanyController;
-    companySchemas!: CompanySchemasInterf;
-    companyService!: CompanyService;
+    readonly companySchemas!: CompanySchemasInterf;
+    readonly companyService!: CompanyService;
 
     constructor(
         companySchemas: CompanySchemasInterf,
