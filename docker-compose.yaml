@@ -1,0 +1,15 @@
+include:
+  - path: ./infra.yaml
+services:
+  backend:
+    build: ./backend
+    container_name: sushi-backend
+    env_file:
+      - ./backend/prod.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy

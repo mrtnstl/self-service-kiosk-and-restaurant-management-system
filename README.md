@@ -2,6 +2,11 @@
 
 the restaurant used as an example is a ficticiuos sushi place with minimalist, pastel visuals
 
+## Setup
+
+Docker compose is set up in the project and it can be ran with the `docker compose --env-file infra.env up --build` command.
+
+
 ## Use Cases (self service kiosk)
 
 - as a user, i want to select if i'm dining at the restaurant or i want my order to go, so...

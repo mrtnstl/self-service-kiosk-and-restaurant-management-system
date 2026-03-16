@@ -1,5 +1,6 @@
 import { Pool } from "pg";
 import config from "../config/index.js";
+import logger from "./logger.js";
 
 if (!config.DATABASE_CONNECTION_STRING) {
     throw new Error("DATABASE_CONNECTION_STRING in undefined!");
@@ -13,8 +14,8 @@ const pool = new Pool({
 });
 
 pool.on("error", (err, _client) => {
-    console.error("Database Error:", err);
-    process.exit(-1);
+    logger.error(`database error: ${err.message}`);
+    process.exit(1);
 });
 
 export async function testDBConn() {

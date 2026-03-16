@@ -8,6 +8,8 @@ import gracefulShutdown from "./utils/gracefulShutdown.js";
 import { testDBConn } from "./utils/database.js";
 import { initRoutes } from "./routes/index.js";
 import reqLoggerMW from "./middleware/reqLoggerMW.js";
+import { isCacheAlive } from "./config/redis.js";
+import logger from "./utils/logger.js";
 
 const app = express();
 
@@ -20,12 +22,18 @@ app.use(cors(config.CORS_OPTIONS));
 app.use(reqLoggerMW());
 
 (async () => {
-    await testDBConn();
+    try{
+        await testDBConn();
+        await isCacheAlive();
+    } catch(err: any){
+        logger.error(err.message);
+        process.exit(1);
+    }
 })();
 
 initRoutes(app);
 
-const server = app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+const server = app.listen(PORT, () => logger.info(`server listening on port ${PORT}`));
 
 process.on("SIGINT", async eventName => {
     await gracefulShutdown(eventName, server);

@@ -1,0 +1,12 @@
+node_modules
+dist
+.git
+.github
+Dockerfile
+.dockerignore
+.env
+.env.*
+*.md
+test/
+jest.config.*
+coverage/
