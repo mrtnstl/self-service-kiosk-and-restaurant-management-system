@@ -1,6 +1,6 @@
 import DishRepo from "../repositories/dish.repository.js";
 import MenuService from "../services/menu.service.js";
-import pool from "../utils/database.js";
+import pool from "../internal/db/postgres.js";
 import MenuController from "./menu.controller.js";
 
 export function createMenuController() {

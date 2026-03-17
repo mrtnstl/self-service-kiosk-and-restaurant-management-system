@@ -2,7 +2,7 @@ import RestaurantController from "./restaurant.controller.js";
 import restaurantSchemas from "../schemas/restaurant.schema.js";
 import RestaurantService from "../services/restaurant.service.js";
 import RestaurantRepo from "../repositories/restaurant.repository.js";
-import pool from "../utils/database.js";
+import pool from "../internal/db/postgres.js";
 
 export function createRestaurantController() {
     const restaurantRepo = new RestaurantRepo(pool);

@@ -1,6 +1,6 @@
 import { Pool } from "pg";
-import config from "../config/index.js";
-import logger from "./logger.js";
+import config from "../../config/index.js";
+import logger from "../../utils/logger.js";
 
 if (!config.DATABASE_CONNECTION_STRING) {
     throw new Error("DATABASE_CONNECTION_STRING in undefined!");

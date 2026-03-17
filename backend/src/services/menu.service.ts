@@ -1,4 +1,4 @@
-import { getRedisClient } from "../config/redis.js";
+import { getRedisClient } from "../internal/cache/redis.js";
 import DishRepo from "../repositories/dish.repository.js";
 import logger from "../utils/logger.js";
 

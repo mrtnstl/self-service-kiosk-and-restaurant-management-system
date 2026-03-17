@@ -5,10 +5,10 @@ import helmet from "helmet";
 import cors from "cors";
 
 import gracefulShutdown from "./utils/gracefulShutdown.js";
-import { isDBAlive } from "./utils/database.js";
+import { isDBAlive } from "./internal/db/postgres.js";
 import { initRoutes } from "./routes/index.js";
 import reqLoggerMW from "./middleware/reqLoggerMW.js";
-import { isCacheAlive } from "./config/redis.js";
+import { isCacheAlive } from "./internal/cache/redis.js";
 import logger from "./utils/logger.js";
 
 const app = express();
