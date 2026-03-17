@@ -18,10 +18,19 @@ pool.on("error", (err, _client) => {
     process.exit(1);
 });
 
-export async function testDBConn() {
-    const isAlive = (await pool.query("SELECT true as isAlive;")).rows[0]
-        .isalive;
-    config.NODE_ENV === "development" && console.log("is db alive:", isAlive);
+pool.on("connect", ()=>{
+    logger.info("database client connected");
+});
+
+export async function isDBAlive(): Promise<boolean>{
+    const res = (await pool.query("SELECT 1;")).rows[0];
+    return res === 1 ? true : false;
+}
+
+export async function closeDatabaseConn() {
+    if(await isDBAlive() === true){
+        await pool.end();
+    }
 }
 
 export default pool;

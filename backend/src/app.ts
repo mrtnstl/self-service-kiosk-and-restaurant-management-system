@@ -5,7 +5,7 @@ import helmet from "helmet";
 import cors from "cors";
 
 import gracefulShutdown from "./utils/gracefulShutdown.js";
-import { testDBConn } from "./utils/database.js";
+import { isDBAlive } from "./utils/database.js";
 import { initRoutes } from "./routes/index.js";
 import reqLoggerMW from "./middleware/reqLoggerMW.js";
 import { isCacheAlive } from "./config/redis.js";
@@ -23,7 +23,7 @@ app.use(reqLoggerMW());
 
 (async () => {
     try{
-        await testDBConn();
+        await isDBAlive();
         await isCacheAlive();
     } catch(err: any){
         logger.error(err.message);
