@@ -41,7 +41,7 @@ const config: Config = {
     ROLES: ROLES,
     ORDER_SERIAL_INITIAL: 1,
     IS_NOTIF_ON: Boolean(process.env.IS_NOTIF_ON),
-    REDIS_URL: process.env.REDIS_URL as string
+    REDIS_URL: process.env.REDIS_URL as string,
 };
 
 export default config;

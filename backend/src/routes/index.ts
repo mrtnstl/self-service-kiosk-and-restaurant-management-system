@@ -1,13 +1,13 @@
 import { Express } from "express";
 
-import globalErrHandlerMW from "../middleware/globalErrHandlerMW.js";
-import wildcardRouteHandlerMW from "../middleware/wildcardRouteHandlerMW.js";
+import globalErrHandlerMW from "../common/middleware/globalErrHandlerMW.js";
+import wildcardRouteHandlerMW from "../common/middleware/wildcardRouteHandlerMW.js";
 
-import authRouter from "./auth.routes.js";
-import restaurantRouter from "./restaurant.routes.js";
-import companyRouter from "./company.routes.js";
-import menuRouter from "./menu.routes.js";
-import orderRouter from "./order.routes.js";
+import authRouter from "../features/auth/auth.routes.js";
+import restaurantRouter from "../features/restaurant/restaurant.routes.js";
+import companyRouter from "../features/company/company.routes.js";
+import menuRouter from "../features/menu/menu.routes.js";
+import orderRouter from "../features/order/order.routes.js";
 
 // TODO: rate limiting
 export function initRoutes(app: Express) {

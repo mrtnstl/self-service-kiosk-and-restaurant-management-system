@@ -4,12 +4,12 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import cors from "cors";
 
-import gracefulShutdown from "./utils/gracefulShutdown.js";
-import { isDBAlive } from "./internal/db/postgres.js";
 import { initRoutes } from "./routes/index.js";
-import reqLoggerMW from "./middleware/reqLoggerMW.js";
-import { isCacheAlive } from "./internal/cache/redis.js";
-import logger from "./utils/logger.js";
+import reqLoggerMW from "./common/middleware/reqLoggerMW.js";
+import gracefulShutdown from "./common/utils/gracefulShutdown.js";
+import { isDBAlive } from "./infrastructure/db/postgres.js";
+import { isCacheAlive } from "./infrastructure/cache/redis.js";
+import logger from "./common/utils/logger.js";
 
 const app = express();
 
@@ -22,10 +22,10 @@ app.use(cors(config.CORS_OPTIONS));
 app.use(reqLoggerMW());
 
 (async () => {
-    try{
+    try {
         await isDBAlive();
         await isCacheAlive();
-    } catch(err: any){
+    } catch (err: any) {
         logger.error(err.message);
         process.exit(1);
     }
@@ -33,7 +33,9 @@ app.use(reqLoggerMW());
 
 initRoutes(app);
 
-const server = app.listen(PORT, () => logger.info(`server listening on port ${PORT}`));
+const server = app.listen(PORT, () =>
+    logger.info(`server listening on port ${PORT}`)
+);
 
 process.on("SIGINT", async eventName => {
     await gracefulShutdown(eventName, server);
