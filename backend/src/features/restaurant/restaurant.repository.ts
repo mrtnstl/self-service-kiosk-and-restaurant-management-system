@@ -1,15 +1,7 @@
 import { Pool } from "pg";
 
 export class RestaurantRepo {
-    private static instance: RestaurantRepo;
-    pool!: Pool;
-    constructor(pool: Pool) {
-        if (RestaurantRepo.instance) {
-            return RestaurantRepo.instance;
-        }
-        this.pool = pool;
-        RestaurantRepo.instance = this;
-    }
+    constructor(private pool: Pool) { }
     async getRestaurantByName(name: string) {
         const restaurant = await this.pool.query(
             "SELECT id, company_id, name FROM restaurants WHERE name = $1;",

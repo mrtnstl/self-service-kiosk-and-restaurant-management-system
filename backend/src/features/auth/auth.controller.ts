@@ -57,8 +57,8 @@ export interface IAuthController {
 
 export class AuthController implements IAuthController {
     constructor(
-        private authSchemas: AuthSchemasInterf,
-        private authService: IAuthService
+        private readonly authSchemas: AuthSchemasInterf,
+        private readonly authService: IAuthService
     ) {}
     // register new manager user,
     register = async (

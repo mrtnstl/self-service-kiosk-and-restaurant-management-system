@@ -4,17 +4,7 @@ import OrderRepo from "./order.repository.js";
 import logger from "../../common/utils/logger.js";
 
 export class OrderService {
-    private static instance: OrderService;
-    private orderRepo!: OrderRepo;
-    private orderHelpers!: IOrderHelpers;
-    constructor(orderRepo: OrderRepo, orderHelpers: IOrderHelpers) {
-        if (OrderService.instance) {
-            return OrderService.instance;
-        }
-        this.orderRepo = orderRepo;
-        this.orderHelpers = orderHelpers;
-        OrderService.instance = this;
-    }
+    constructor(private orderRepo: OrderRepo, private orderHelpers: IOrderHelpers) {}
     async createNewOrder(
         order: {
             type: string;

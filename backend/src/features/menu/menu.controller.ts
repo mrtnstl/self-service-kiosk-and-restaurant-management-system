@@ -2,15 +2,7 @@ import { RequestHandler } from "express";
 import MenuService from "./menu.service.js";
 
 class MenuController {
-    private static instance: MenuController;
-    private menuService!: MenuService;
-    constructor(menuService: MenuService) {
-        if (MenuController.instance) {
-            return MenuController.instance;
-        }
-        this.menuService = menuService;
-        MenuController.instance = this;
-    }
+    constructor(private menuService: MenuService) {}
 
     getAllDishOfCompany(): RequestHandler {
         return async (req, res) => {

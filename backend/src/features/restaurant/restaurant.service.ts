@@ -1,15 +1,7 @@
 import RestaurantRepo from "./restaurant.repository.js";
 
 export class RestaurantService {
-    private static instance: RestaurantService;
-    restaurantRepo!: RestaurantRepo;
-    constructor(restaurantRepo: RestaurantRepo) {
-        if (RestaurantService.instance) {
-            return RestaurantService.instance;
-        }
-        this.restaurantRepo = restaurantRepo;
-        RestaurantService.instance = this;
-    }
+    constructor(private restaurantRepo: RestaurantRepo) {}
     async createNewRestaurant(restaurant: {
         companyId: string;
         name: string;

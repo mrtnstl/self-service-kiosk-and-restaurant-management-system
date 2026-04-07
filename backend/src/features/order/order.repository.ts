@@ -11,15 +11,7 @@ type NewOrderUserInput = {
 };
 
 export class OrderRepo {
-    private static instance: OrderRepo;
-    private pool!: Pool;
-    constructor(pool: Pool) {
-        if (OrderRepo.instance) {
-            return OrderRepo.instance;
-        }
-        this.pool = pool;
-        OrderRepo.instance = this;
-    }
+    constructor(private pool: Pool) {}
     async calcTotalPrice(itemIdArray: string[], itemQuantityArray: number[]) {
         const total = await this.pool.query(
             `

@@ -1,15 +1,7 @@
 import { Pool, QueryResult } from "pg";
 
 export class UserRepo {
-    private static instance: UserRepo;
-    pool!: Pool;
-    constructor(pool: Pool) {
-        if (UserRepo.instance) {
-            return UserRepo.instance;
-        }
-        this.pool = pool;
-        UserRepo.instance = this;
-    }
+    constructor(private readonly pool: Pool) {}
     // create manager account, fixed manager role (after company profile creation)
     async insertNewManagerUser({
         name,

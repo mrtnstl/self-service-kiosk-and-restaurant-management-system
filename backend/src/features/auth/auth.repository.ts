@@ -11,7 +11,7 @@ export interface IAuthRepository {
 }
 
 export class AuthRepository implements IAuthRepository {
-    constructor(private pool: Pool) {}
+    constructor(private readonly pool: Pool) {}
 
     async setUserVerifiedToTrue(userSecret: string): Promise<QueryResult> {
         try {

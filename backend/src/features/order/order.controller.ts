@@ -5,17 +5,7 @@ import { BadRequestError, ValidationError } from "../../common/errors/index.js";
 import z from "zod";
 
 class OrderController {
-    private static instance: OrderController;
-    private orderService!: OrderService;
-    private orderSchemas!: IOrderSchema;
-    constructor(orderService: OrderService, orderSchemas: IOrderSchema) {
-        if (OrderController.instance) {
-            return OrderController.instance;
-        }
-        this.orderService = orderService;
-        this.orderSchemas = orderSchemas;
-        OrderController.instance = this;
-    }
+    constructor(private orderService: OrderService, private orderSchemas: IOrderSchema) {}
     createOrder(): RequestHandler {
         return async (req, res, _next) => {
             const { companyId, userId, restaurantId } = req.user;

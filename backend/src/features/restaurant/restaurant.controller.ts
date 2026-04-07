@@ -5,20 +5,10 @@ import { BadRequestError, ValidationError } from "../../common/errors/index.js";
 import z from "zod";
 
 class RestaurantController {
-    private static instance: RestaurantController;
-    restaurantSchemas!: RestaurantSchemasInterf;
-    restaurantService!: RestaurantService;
     constructor(
-        restaurantSchemas: RestaurantSchemasInterf,
-        restaurantService: RestaurantService
-    ) {
-        if (RestaurantController.instance) {
-            return RestaurantController.instance;
-        }
-        this.restaurantSchemas = restaurantSchemas;
-        this.restaurantService = restaurantService;
-        RestaurantController.instance = this;
-    }
+        private restaurantSchemas: RestaurantSchemasInterf,
+        private restaurantService: RestaurantService
+    ) {}
 
     getRestaurantById(): RequestHandler {
         return async (_req, res) => {

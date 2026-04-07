@@ -34,10 +34,10 @@ export interface IAuthService {
 
 export class AuthService implements IAuthService {
     constructor(
-        private userRepo: UserRepo,
-        private authRepo: IAuthRepository,
-        private notificationService: INotificationService,
-        private bcrypt: ICryptoUtil
+        private readonly userRepo: UserRepo,
+        private readonly authRepo: IAuthRepository,
+        private readonly notificationService: INotificationService,
+        private readonly bcrypt: ICryptoUtil
     ) {}
 
     async registerNewCompanyManager(data: UserManager): Promise<void> {
